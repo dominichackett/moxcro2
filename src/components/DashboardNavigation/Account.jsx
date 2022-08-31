@@ -25,6 +25,7 @@ import {
   OfficeBuildingIcon,
   SearchIcon,
 } from "@heroicons/react/solid";
+import { useMoralis } from "react-moralis";
 
 const cards = [
   {
@@ -61,6 +62,7 @@ function classNames(...classes) {
 }
 
 export default function Account() {
+  const { user } = useMoralis();
   return (
     <main className="flex-1 pb-8">
       {/* Page header */}
@@ -83,7 +85,9 @@ export default function Account() {
                       alt=""
                     />
                     <h1 className="ml-3 text-2xl font-bold leading-7 text-gray-900 sm:leading-9 sm:truncate">
-                      Welcome 0x5fe..6793
+                      Welcome{" "}
+                      {user.get("ethAddress").slice(0, 4).concat("...") +
+                        user.get("ethAddress").slice(38, 42)}
                     </h1>
                   </div>
                   <dl className="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">

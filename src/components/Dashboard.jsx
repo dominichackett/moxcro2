@@ -18,6 +18,8 @@ import Account from "./DashboardNavigation/Account";
 import Image from "next/image";
 import Manager from "./DashboardNavigation/Manager";
 import Collection from "./DashboardNavigation/Collection";
+import { userAgent } from "next/server";
+import { useMoralis } from "react-moralis";
 
 const navigation = [
   { name: "Account", href: "#", icon: HomeIcon, current: true },
@@ -26,30 +28,23 @@ const navigation = [
   { name: "Marketplace", href: "#", icon: CreditCardIcon, current: false },
   { name: "Insights", href: "#", icon: DocumentReportIcon, current: false },
 ];
-const secondaryNavigation = [
-  { name: "Settings", href: "#", icon: CogIcon },
-  { name: "Help", href: "#", icon: QuestionMarkCircleIcon },
-  { name: "Privacy", href: "#", icon: ShieldCheckIcon },
-];
+// const secondaryNavigation = [
+//   { name: "Settings", href: "#", icon: CogIcon },
+//   { name: "Help", href: "#", icon: QuestionMarkCircleIcon },
+//   { name: "Privacy", href: "#", icon: ShieldCheckIcon },
+// ];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function Dashboard() {
+  const { user } = useMoralis();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState("Account");
 
   return (
     <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-gray-100">
-        <body class="h-full">
-        ```
-      */}
       <div className="min-h-full w-full">
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
@@ -298,7 +293,9 @@ export default function Dashboard() {
                       />
                       <span className="hidden ml-3 text-gray-700 text-sm font-medium lg:block">
                         <span className="sr-only">Open user menu for </span>
-                        0xfe5...7765
+
+                        {user.get("ethAddress").slice(0, 4).concat("...") +
+                          user.get("ethAddress").slice(38, 42)}
                       </span>
                       <ChevronDownIcon
                         className="hidden flex-shrink-0 ml-1 h-5 w-5 text-gray-400 lg:block"
