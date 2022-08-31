@@ -6,7 +6,7 @@ export default function Manager() {
   }
   return (
     <form className="flex flex-col items-center  w-full ">
-      <div className="flex flex-col items-center justify-center p-12 w-full bg-[url('/soccerfield3.jpeg')]">
+      <div className="flex flex-col items-center justify-center p-12 w-full bg-[url('/wildcard-soccer.png')]">
         <div className="py-4 w-2/12 z-50">
           <Listbox position={0} />
         </div>

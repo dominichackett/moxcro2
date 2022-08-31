@@ -1,10 +1,11 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
   ClockIcon,
   CogIcon,
   CreditCardIcon,
   DocumentReportIcon,
+  ExclamationCircleIcon,
   HomeIcon,
   MenuAlt1Icon,
   QuestionMarkCircleIcon,
@@ -19,7 +20,7 @@ import Image from "next/image";
 import Manager from "./DashboardNavigation/Manager";
 import Collection from "./DashboardNavigation/Collection";
 import { userAgent } from "next/server";
-import { useMoralis } from "react-moralis";
+import { useChain, useMoralis } from "react-moralis";
 
 const navigation = [
   { name: "Account", href: "#", icon: HomeIcon, current: true },
@@ -39,9 +40,38 @@ function classNames(...classes) {
 }
 
 export default function Dashboard() {
-  const { user, logout } = useMoralis();
+  const { switchNetwork } = useChain();
+  const {
+    user,
+    logout,
+    chainId,
+    isAuthenticated,
+    isWeb3Enabled,
+    enableWeb3,
+    Moralis,
+  } = useMoralis();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState("Account");
+
+  const [cronos, setCronos] = useState(true);
+
+  // useEffect(() => {
+  //   if (isWeb3Enabled) enableWeb3();
+  //   if (isAuthenticated && chainId != null) {
+  //     if (chainId == "338") {
+  //       setCronos(true);
+  //     } else if (chainId != "338") {
+  //       setCronos(false);
+  //     }
+  //   }
+  // }, [isAuthenticated, chainId]);
+
+  // function setNetwork() {
+  //   if (!cronos) {
+  //     Moralis.enableWeb3();
+  //     switchNetwork("338");
+  //   }
+  // }
 
   return (
     <>
@@ -274,12 +304,21 @@ export default function Dashboard() {
                 >
                   <span className="sr-only">View notifications</span>
                   {/* <BellIcon className="h-6 w-6" aria-hidden="true" /> */}
-                  <Image
-                    src="/cronoslogo.jpeg"
-                    width={20}
-                    height={20}
-                    className="ring-black"
-                  />
+                  {cronos ? (
+                    <Image
+                      src="/cronoslogo.jpeg"
+                      width={20}
+                      height={20}
+                      className="ring-black"
+                    />
+                  ) : (
+                    <div onClick={setNetwork}>
+                      <ExclamationCircleIcon
+                        width={20}
+                        className="text-red-500"
+                      />
+                    </div>
+                  )}
                 </button>
 
                 {/* Profile dropdown */}
@@ -287,8 +326,8 @@ export default function Dashboard() {
                   <div>
                     <Menu.Button className="max-w-xs bg-white rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 lg:p-2 lg:rounded-md lg:hover:bg-gray-50">
                       <img
-                        className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        className="h-6 w-auto rounded-full"
+                        src="/wildcardround.png"
                         alt=""
                       />
                       <span className="hidden ml-3 text-gray-700 text-sm font-medium lg:block">
@@ -312,8 +351,8 @@ export default function Dashboard() {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      <Menu.Item>
+                    <Menu.Items className="origin-top-right cursor-pointer absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      {/* <Menu.Item>
                         {({ active }) => (
                           <a
                             href="#"
@@ -325,8 +364,8 @@ export default function Dashboard() {
                             Your Profile
                           </a>
                         )}
-                      </Menu.Item>
-                      <Menu.Item>
+                      </Menu.Item> */}
+                      {/* <Menu.Item>
                         {({ active }) => (
                           <a
                             href="#"
@@ -338,7 +377,7 @@ export default function Dashboard() {
                             Settings
                           </a>
                         )}
-                      </Menu.Item>
+                      </Menu.Item> */}
                       <Menu.Item>
                         {({ active }) => (
                           <a

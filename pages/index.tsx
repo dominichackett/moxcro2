@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import { useEffect } from "react";
 import { useMoralis } from "react-moralis";
 import Dashboard from "../src/components/Dashboard";
 import Login from "../src/components/Login";
