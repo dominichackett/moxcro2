@@ -3,34 +3,32 @@ import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
 import { useMoralis } from "react-moralis";
 
-const people = [
-  { name: "Wade Cooper" },
-  { name: "Arlene Mccoy" },
-  { name: "Devon Webb" },
-  { name: "Tom Cook" },
-  { name: "Tanya Fox" },
-  { name: "Hellen Schmidt" },
-  { name: "Christiano Ronaldo" },
-];
-
-export default function Example() {
+export default function Example(props) {
   const { Moralis } = useMoralis();
   const [selectedPlayer, setSelectedPlayer] = useState();
   const [player, setPlayer] = useState([]);
-  const [selectedPlayerId, setSelectedPlayerId] = useState(new Map());
+  // const [selectedPlayerId, setSelectedPlayerId] = useState(new Map());
 
   useEffect(() => {
     const Player = Moralis.Object.extend("Player");
     const query = new Moralis.Query(Player);
     query.find().then((results) => {
       let r = [];
-      let rmap = new Map();
+      // let rmap = new Map();
       results.forEach((result) => {
-        r.push({ id: result.id, Name: result.get("name") });
-        rmap[result.get("Player")] = result.id;
+        r.push({
+          id: result.id,
+          Name: result.get("name"),
+          Position: result.get("position"),
+          NftId: result.get("nftId"),
+          Number: result.get("number"),
+          // Image: result.get("image"),
+          // Team: result.get("team"),
+        });
+        // rmap[result.get("Player")] = result.id;
       });
       setPlayer(r);
-      setSelectedPlayerId(rmap);
+      // setSelectedPlayerId(rmap);
       console.log(player);
     });
   }, []);
@@ -65,7 +63,7 @@ export default function Example() {
                       active ? "bg-green-100 text-green-900" : "text-gray-900"
                     }`
                   }
-                  value={person.Name}
+                  value={person.Name + " " + person.Number}
                 >
                   {({ selectedPlayer }) => (
                     <>
@@ -74,7 +72,7 @@ export default function Example() {
                           selectedPlayer ? "font-medium" : "font-normal"
                         }`}
                       >
-                        {person.Name}
+                        {person.Name + " " + person.Number}
                       </span>
                       {selectedPlayer ? (
                         <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-green-600">

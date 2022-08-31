@@ -39,7 +39,7 @@ function classNames(...classes) {
 }
 
 export default function Dashboard() {
-  const { user } = useMoralis();
+  const { user, logout } = useMoralis();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState("Account");
 
@@ -342,7 +342,7 @@ export default function Dashboard() {
                       <Menu.Item>
                         {({ active }) => (
                           <a
-                            href="#"
+                            onClick={logout}
                             className={classNames(
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700"

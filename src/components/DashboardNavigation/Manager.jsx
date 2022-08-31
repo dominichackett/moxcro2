@@ -8,7 +8,7 @@ export default function Manager() {
     <form className="flex flex-col items-center  w-full ">
       <div className="flex flex-col items-center justify-center p-12 w-full bg-[url('/soccerfield3.jpeg')]">
         <div className="py-4 w-2/12 z-50">
-          <Listbox />
+          <Listbox position={0} />
         </div>
         <div className="flex p-12 flex-row space-x-8 items-center justify-evenly w-11/12 z-40">
           <div className="py-2 w-2/12">
