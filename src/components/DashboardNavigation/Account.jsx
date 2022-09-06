@@ -86,7 +86,7 @@ export default function Account() {
         {
           name: "Total Points",
           icon: GlobeAltIcon,
-          amount: "677.50",
+          amount: "677",
         },
         {
           name: "Players",
