@@ -6,7 +6,7 @@ export default function Collection() {
   const { Moralis } = useMoralis();
   const [player, setPlayer] = useState([]);
 
-  const [openSale, setOpenSale] = useState(false);
+  //   const [openSale, setOpenSale] = useState(false);
 
   useEffect(() => {
     const Player = Moralis.Object.extend("Player");
@@ -25,10 +25,8 @@ export default function Collection() {
           Team: result.get("team"),
           Type: result.get("type"),
         });
-        // rmap[result.get("Player")] = result.id;
       });
       setPlayer(r);
-      // setSelectedPlayerId(rmap);
       console.log(player);
     });
   }, []);
@@ -43,7 +41,7 @@ export default function Collection() {
           Marketplace
         </h2>
 
-        {openSale && <SellModal />}
+        {/* {openSale && <SellModal />} */}
 
         <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {player.map((card, cardIdx) => (
