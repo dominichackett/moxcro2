@@ -12,7 +12,7 @@ function classNames(...classes) {
 }
 
 export default function Example() {
-  const [selectedTab, setSelectedTab] = useState("Stickerpack");
+  const [selectedTab, setSelectedTab] = useState("Stickerpacks");
 
   return (
     <div>
@@ -25,7 +25,7 @@ export default function Example() {
           id="tabs"
           name="tabs"
           className="block w-full rounded-md border-gray-300 focus:border-cyan-500 focus:ring-cyan-500"
-          defaultValue={tabs.find((tab) => selectedTab).name}
+          defaultValue={"Stickerpacks"}
         >
           {tabs.map((tab) => (
             <a
