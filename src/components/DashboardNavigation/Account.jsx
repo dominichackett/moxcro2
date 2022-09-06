@@ -1,43 +1,17 @@
-import { Fragment, useState } from "react";
-import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
-  BellIcon,
-  ClockIcon,
-  CogIcon,
-  CreditCardIcon,
   CurrencyDollarIcon,
-  DocumentReportIcon,
   FireIcon,
   GlobeAltIcon,
-  HomeIcon,
-  MenuAlt1Icon,
-  QuestionMarkCircleIcon,
-  ScaleIcon,
-  ShieldCheckIcon,
   UserGroupIcon,
-  XIcon,
 } from "@heroicons/react/outline";
 import {
   CashIcon,
   CheckCircleIcon,
-  ChevronDownIcon,
   ChevronRightIcon,
-  OfficeBuildingIcon,
-  SearchIcon,
 } from "@heroicons/react/solid";
+import { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
 
-const cards = [
-  {
-    name: "Account balance",
-    href: "#",
-    icon: CurrencyDollarIcon,
-    amount: "$30,659.45",
-  },
-  { name: "Players", href: "#", icon: UserGroupIcon, amount: "75" },
-  { name: "Legendary", href: "#", icon: FireIcon, amount: "1" },
-  // More items...
-];
 const transactions = [
   {
     id: 1,
@@ -62,7 +36,72 @@ function classNames(...classes) {
 }
 
 export default function Account() {
-  const { user } = useMoralis();
+  const { user, Moralis } = useMoralis();
+  const [player, setPlayer] = useState([]);
+  const [legendary, setLegendary] = useState([]);
+  const [cards, setCards] = useState([
+    {
+      name: "Account Balance",
+      icon: CurrencyDollarIcon,
+      amount: "$30,659.45",
+    },
+    {
+      name: "Players",
+      icon: UserGroupIcon,
+      amount: "",
+    },
+    {
+      name: "Legendary",
+      icon: FireIcon,
+      amount: "",
+    },
+  ]);
+
+  useEffect(() => {
+    //  GET ALL PLAYERS
+    const Player = Moralis.Object.extend("Player");
+    const query = new Moralis.Query(Player);
+    query.find().then((results) => {
+      let r = [];
+      results.forEach((result) => {
+        r.push({
+          id: result.id,
+          Name: result.get("name"),
+        });
+      });
+      setPlayer(r);
+      //  GET ONLY LEGENDARY PLAYERS
+      const Player2 = Moralis.Object.extend("Player");
+      const query2 = new Moralis.Query(Player2);
+      query2.equalTo("type", "legendary");
+      query2.find().then((results) => {
+        let l = [];
+        results.forEach((result) => {
+          l.push(result.get("type"));
+        });
+        setLegendary(l);
+      });
+      //  SET CARD DETAILS
+      setCards([
+        {
+          name: "Account Balance",
+          icon: CurrencyDollarIcon,
+          amount: "$30,659.45",
+        },
+        {
+          name: "Players",
+          icon: UserGroupIcon,
+          amount: player.length,
+        },
+        {
+          name: "Legendary",
+          icon: FireIcon,
+          amount: legendary.length,
+        },
+      ]);
+    });
+  }, []);
+
   return (
     <main className="flex-1 pb-8">
       {/* Page header */}
@@ -74,15 +113,14 @@ export default function Account() {
               <div className="flex items-center">
                 <img
                   className="hidden h-16 w-16 rounded-full sm:block"
-                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
+                  src="/wildcardround.png"
                   alt=""
                 />
                 <div>
                   <div className="flex items-center">
                     <img
                       className="h-16 w-16 rounded-full sm:hidden"
-                      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
-                      alt=""
+                      src="/wildcardround.png"
                     />
                     <h1 className="ml-3 text-2xl font-bold leading-7 text-gray-900 sm:leading-9 sm:truncate">
                       Welcome{" "}
@@ -111,7 +149,7 @@ export default function Account() {
                 </div>
               </div>
             </div>
-            <div className="mt-6 flex space-x-3 md:mt-0 md:ml-4">
+            {/* <div className="mt-6 flex space-x-3 md:mt-0 md:ml-4">
               <button
                 type="button"
                 className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
@@ -124,7 +162,7 @@ export default function Account() {
               >
                 Buy Packs
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -163,23 +201,13 @@ export default function Account() {
                     </div>
                   </div>
                 </div>
-                <div className="bg-gray-50 px-5 py-3">
-                  <div className="text-sm">
-                    <a
-                      href={card.href}
-                      className="font-medium text-cyan-700 hover:text-cyan-900"
-                    >
-                      View all
-                    </a>
-                  </div>
-                </div>
               </div>
             ))}
           </div>
         </div>
 
         <h2 className="max-w-6xl mx-auto mt-8 px-4 text-lg leading-6 font-medium text-gray-900 sm:px-6 lg:px-8">
-          Recent activity
+          Activity
         </h2>
 
         {/* Activity list (smallest breakpoint only) */}
