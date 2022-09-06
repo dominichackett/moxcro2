@@ -41,9 +41,9 @@ export default function Account() {
   const [legendary, setLegendary] = useState([]);
   const [cards, setCards] = useState([
     {
-      name: "Account Balance",
+      name: "Total Points",
       icon: CurrencyDollarIcon,
-      amount: "$30,659.45",
+      amount: "67.50",
     },
     {
       name: "Players",
@@ -84,9 +84,9 @@ export default function Account() {
       //  SET CARD DETAILS
       setCards([
         {
-          name: "Account Balance",
-          icon: CurrencyDollarIcon,
-          amount: "$30,659.45",
+          name: "Total Points",
+          icon: GlobeAltIcon,
+          amount: "677.50",
         },
         {
           name: "Players",
@@ -251,7 +251,7 @@ export default function Account() {
             ))}
           </ul>
 
-          <nav
+          {/* <nav
             className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200"
             aria-label="Pagination"
           >
@@ -269,7 +269,7 @@ export default function Account() {
                 Next
               </a>
             </div>
-          </nav>
+          </nav> */}
         </div>
 
         {/* Activity table (small breakpoint and up) */}
@@ -351,7 +351,7 @@ export default function Account() {
                   </tbody>
                 </table>
                 {/* Pagination */}
-                <nav
+                {/* <nav
                   className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6"
                   aria-label="Pagination"
                 >
@@ -376,7 +376,7 @@ export default function Account() {
                       Next
                     </a>
                   </div>
-                </nav>
+                </nav> */}
               </div>
             </div>
           </div>

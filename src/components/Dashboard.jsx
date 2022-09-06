@@ -27,13 +27,8 @@ const navigation = [
   { name: "Manager", href: "#", icon: ClockIcon, current: false },
   { name: "Collection", href: "#", icon: ScaleIcon, current: false },
   { name: "Marketplace", href: "#", icon: CreditCardIcon, current: false },
-  { name: "Insights", href: "#", icon: DocumentReportIcon, current: false },
+  // { name: "Insights", href: "#", icon: DocumentReportIcon, current: false },
 ];
-// const secondaryNavigation = [
-//   { name: "Settings", href: "#", icon: CogIcon },
-//   { name: "Help", href: "#", icon: QuestionMarkCircleIcon },
-//   { name: "Privacy", href: "#", icon: ShieldCheckIcon },
-// ];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
