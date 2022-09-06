@@ -65,7 +65,6 @@ export default function Example() {
           </nav>
         </div>
         <main className="flex-1 pb-8">
-          {/* THIS WHOLE MAIN SECTION HAS BEEN put into DashboardNavigation/ACCOUNT - */}
           <div hidden={selectedTab != "Stickerpacks"}>
             <Stickerpack />
           </div>

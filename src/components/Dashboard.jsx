@@ -2,15 +2,11 @@ import { Fragment, useEffect, useState } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
   ClockIcon,
-  CogIcon,
   CreditCardIcon,
-  DocumentReportIcon,
   ExclamationCircleIcon,
   HomeIcon,
   MenuAlt1Icon,
-  QuestionMarkCircleIcon,
   ScaleIcon,
-  ShieldCheckIcon,
   XIcon,
 } from "@heroicons/react/outline";
 import { ChevronDownIcon } from "@heroicons/react/solid";
@@ -27,7 +23,6 @@ const navigation = [
   { name: "Manager", href: "#", icon: ClockIcon, current: false },
   { name: "Collection", href: "#", icon: ScaleIcon, current: false },
   { name: "Marketplace", href: "#", icon: CreditCardIcon, current: false },
-  // { name: "Insights", href: "#", icon: DocumentReportIcon, current: false },
 ];
 
 function classNames(...classes) {

@@ -124,6 +124,33 @@ export default function Example() {
                       </span>
                     </div>
                   </div>
+                  <div className="min-w-0 flex-1 pl-5 py-1 text-sm text-gray-500 sm:py-3">
+                    <span className="font-medium text-gray-900">Team:</span>{" "}
+                    <p>
+                      <a
+                        href="https://github.com/felixpx"
+                        className="cursor-pointer hover:text-black"
+                      >
+                        Felix Prabitz
+                      </a>
+                    </p>
+                    <p>
+                      <a
+                        href="https://github.com/dominichackett"
+                        className="cursor-pointer hover:text-black"
+                      >
+                        Dominic Hackett
+                      </a>
+                    </p>
+                    <p>
+                      <a
+                        href="https://www.linkedin.com/in/devin-lamoureux/"
+                        className="cursor-pointer hover:text-black"
+                      >
+                        Devin Lamoreux
+                      </a>
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -169,7 +196,7 @@ export default function Example() {
               <div className="relative pl-4 -mr-40 sm:mx-auto sm:max-w-3xl sm:px-0 lg:max-w-none lg:h-full lg:pl-12">
                 <img
                   className="w-full rounded-md shadow-xl ring-1 ring-black ring-opacity-5 lg:h-full lg:w-auto lg:max-w-none"
-                  src="/ExampleImg.png"
+                  src="/AccountExampleImg.png"
                   alt=""
                 />
               </div>
