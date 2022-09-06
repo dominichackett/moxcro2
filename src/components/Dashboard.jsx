@@ -19,7 +19,7 @@ import Account from "./DashboardNavigation/Account";
 import Image from "next/image";
 import Manager from "./DashboardNavigation/Manager";
 import Collection from "./DashboardNavigation/Collection";
-import { userAgent } from "next/server";
+import Marketplace from "./DashboardNavigation/Marketplace";
 import { useChain, useMoralis } from "react-moralis";
 
 const navigation = [
@@ -237,23 +237,6 @@ export default function Dashboard() {
                   </a>
                 ))}
               </div>
-              {/* <div className="mt-6 pt-6">
-                <div className="px-2 space-y-1">
-                  {secondaryNavigation.map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className="group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md text-cyan-100 hover:text-white hover:bg-cyan-600"
-                    >
-                      <item.icon
-                        className="mr-4 h-6 w-6 text-cyan-200"
-                        aria-hidden="true"
-                      />
-                      {tab.name}
-                    </a>
-                  ))}
-                </div>
-              </div> */}
             </nav>
           </div>
         </div>
@@ -270,28 +253,6 @@ export default function Dashboard() {
             </button>
             {/* Search bar */}
             <div className="flex-1 px-4 flex justify-end sm:px-6 lg:max-w-6xl lg:mx-auto lg:px-8">
-              {/* <div className="flex-1 flex">
-                <form className="w-full flex md:ml-0" action="#" method="GET">
-                  <label htmlFor="search-field" className="sr-only">
-                    Search
-                  </label>
-                  <div className="relative w-full text-gray-400 focus-within:text-gray-600">
-                    <div
-                      className="absolute inset-y-0 left-0 flex items-center pointer-events-none"
-                      aria-hidden="true"
-                    >
-                      <SearchIcon className="h-5 w-5" aria-hidden="true" />
-                    </div>
-                    <input
-                      id="search-field"
-                      name="search-field"
-                      className="block w-full h-full pl-8 pr-3 py-2 border-transparent text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-transparent sm:text-sm"
-                      placeholder="Search transactions"
-                      type="search"
-                    />
-                  </div>
-                </form>
-              </div> */}
               <div className="ml-4 flex items-center sticky right-2 justify-center md:ml-6">
                 <button
                   type="button"
@@ -347,32 +308,6 @@ export default function Dashboard() {
                     leaveTo="transform opacity-0 scale-95"
                   >
                     <Menu.Items className="origin-top-right cursor-pointer absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                      {/* <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
-                            )}
-                          >
-                            Your Profile
-                          </a>
-                        )}
-                      </Menu.Item> */}
-                      {/* <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#"
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700"
-                            )}
-                          >
-                            Settings
-                          </a>
-                        )}
-                      </Menu.Item> */}
                       <Menu.Item>
                         {({ active }) => (
                           <a
@@ -392,9 +327,7 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-          {/* <div className="absolute w-full top-0">
-            <Header />
-          </div> */}
+
           <main className="flex-1 pb-8">
             {/* THIS WHOLE MAIN SECTION HAS BEEN put into DashboardNavigation/ACCOUNT - */}
             <div hidden={selectedTab != "Account"}>
@@ -405,6 +338,9 @@ export default function Dashboard() {
             </div>
             <div hidden={selectedTab != "Collection"}>
               <Collection />
+            </div>
+            <div hidden={selectedTab != "Marketplace"}>
+              <Marketplace />
             </div>
           </main>
         </div>
