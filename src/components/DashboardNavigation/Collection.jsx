@@ -1,124 +1,12 @@
 import { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
+import SellModal from "../Modals/SellModal";
 
-const products = [
-  {
-    id: 1,
-    name: "Christiano Ronaldo",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "Team",
-    color: "Legendary",
-  },
-  {
-    id: 2,
-    name: "Lionel Messi",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "Team",
-    color: "Common",
-  },
-  {
-    id: 3,
-    name: "Player xyz",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "",
-    color: "Common",
-  },
-  {
-    id: 4,
-    name: "Player abc",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "",
-    color: "Common",
-  },
-  {
-    id: 5,
-    name: "Wayne Rooney",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "Team",
-    color: "Common",
-  },
-  {
-    id: 5,
-    name: "Wayne Rooney",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "Team",
-    color: "Common",
-  },
-  {
-    id: 5,
-    name: "Wayne Rooney",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "Team",
-    color: "Common",
-  },
-  {
-    id: 5,
-    name: "Wayne Rooney",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "Team",
-    color: "Common",
-  },
-  {
-    id: 5,
-    name: "Wayne Rooney",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "Team",
-    color: "Common",
-  },
-  {
-    id: 5,
-    name: "Wayne Rooney",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "Team",
-    color: "Common",
-  },
-  {
-    id: 5,
-    name: "Wayne Rooney",
-    href: "#",
-    imageSrc:
-      "https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: "Team",
-    color: "Common",
-  },
-  // More products...
-];
-
-export default function Example() {
+export default function Collection() {
   const { Moralis } = useMoralis();
-  const [selectedPlayer, setSelectedPlayer] = useState();
   const [player, setPlayer] = useState([]);
+
+  const [openSale, setOpenSale] = useState(false);
 
   useEffect(() => {
     const Player = Moralis.Object.extend("Player");
@@ -145,15 +33,20 @@ export default function Example() {
     });
   }, []);
   function sellPlayer() {
-    alert("selected");
-    // pop up modal for selling a player on the marketplace
+    setOpenSale(true);
+    if (openSale) {
+      setOpenSale(false);
+    }
   }
+
   return (
     <div className="bg-white">
       <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
         <h2 className="text-2xl font-bold tracking-tight text-gray-900">
           Collection
         </h2>
+
+        {openSale && <SellModal />}
 
         <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {player.map((card, cardIdx) => (
