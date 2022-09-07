@@ -16,15 +16,15 @@ export default function Example() {
 
   return (
     <div>
-      <div className="sm:hidden">
+      <div className="pt-16">
         <label htmlFor="tabs" className="sr-only">
           Select a tab
         </label>
         {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
-        <div
+        <select
           id="tabs"
           name="tabs"
-          className="block w-full rounded-md border-gray-300 focus:border-cyan-500 focus:ring-cyan-500"
+          className="block sr-only w-full rounded-md border-gray-300 focus:border-cyan-500 focus:ring-cyan-500"
           defaultValue={"Stickerpacks"}
         >
           {tabs.map((tab) => (
@@ -37,7 +37,7 @@ export default function Example() {
               {tab.name}
             </a>
           ))}
-        </div>
+        </select>
       </div>
       <div className="hidden sm:block">
         <div className="border-b border-gray-200">

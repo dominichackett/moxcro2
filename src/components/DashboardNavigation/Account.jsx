@@ -39,11 +39,12 @@ export default function Account() {
   const { user, Moralis, isWeb3Enabled, enableWeb3 } = useMoralis();
   const [player, setPlayer] = useState([]);
   const [legendary, setLegendary] = useState([]);
+  const [totalPoints, setTotalPoints] = useState();
   const [cards, setCards] = useState([
     {
       name: "Total Points",
       icon: CurrencyDollarIcon,
-      amount: "67.50",
+      amount: "",
     },
     {
       name: "Players",
@@ -69,8 +70,8 @@ export default function Account() {
           id: result.id,
           Name: result.get("name"),
         });
+        setPlayer(r);
       });
-      setPlayer(r);
       //  GET ONLY LEGENDARY PLAYERS
       const Player2 = Moralis.Object.extend("Player");
       const query2 = new Moralis.Query(Player2);
@@ -82,12 +83,23 @@ export default function Account() {
         });
         setLegendary(l);
       });
+      //  QUERY LEADERBOARD
+      const _User = new Moralis.Object.extend("_User");
+      const _user = new _User();
+      const Leaderboard = Moralis.Object.extend("Leaderboard");
+      const query3 = new Moralis.Query(Leaderboard);
+      _user.set("objectId", user.id);
+      query3.equalTo("user", _user);
+      query3.first().then((results) => {
+        console.log(results);
+        setTotalPoints(results.get("points"));
+      });
       //  SET CARD DETAILS
       setCards([
         {
           name: "Total Points",
           icon: GlobeAltIcon,
-          amount: "677",
+          amount: totalPoints,
         },
         {
           name: "Players",
