@@ -21,7 +21,7 @@ export default function Example() {
           Select a tab
         </label>
         {/* Use an "onChange" listener to redirect the user to the selected tab URL. */}
-        <select
+        <div
           id="tabs"
           name="tabs"
           className="block w-full rounded-md border-gray-300 focus:border-cyan-500 focus:ring-cyan-500"
@@ -37,7 +37,7 @@ export default function Example() {
               {tab.name}
             </a>
           ))}
-        </select>
+        </div>
       </div>
       <div className="hidden sm:block">
         <div className="border-b border-gray-200">
