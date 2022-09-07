@@ -106,7 +106,7 @@ export default function Collection() {
               <div className="flex items-center justify-around  mt-2">
                 <div
                   className={`inline-flex items-center px-2 py-1 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 ${
-                    card.Type == "legendary"
+                    card.attributes[4].value == "legendary"
                       ? "text-yellow-500"
                       : "text-gray-500"
                   }`}

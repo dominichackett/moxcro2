@@ -58,7 +58,7 @@ export default function Account() {
   ]);
 
   useEffect(() => {
-    if (!isWeb3Enabled) enableWeb3;
+    if (!isWeb3Enabled) enableWeb3();
     //  GET ALL PLAYERS
     const Player = Moralis.Object.extend("Player");
     const query = new Moralis.Query(Player);
