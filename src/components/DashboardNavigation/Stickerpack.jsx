@@ -1,5 +1,11 @@
 import { useState } from "react";
 import { Tab } from "@headlessui/react";
+import {
+  WildCardAddress,
+  WildCardABI,
+} from "../../Contracts/WildCardNFTContract";
+import { ethers } from "ethers";
+import { useMoralis } from "react-moralis";
 
 const product = {
   name: "Sticker Pack",
@@ -35,8 +41,18 @@ const product = {
 };
 
 export default function Stickerpack() {
+  const { Moralis, web3, user } = useMoralis();
   function purchasePack() {
-    // CONRACT CALL
+    const WildcardContract = new ethers.Contract(
+      WildCardAddress,
+      WildCardABI,
+      web3.getSigner()
+    );
+    let transaction = await MeetingContract.mintCard(
+      // STRING
+      // Calldata CARD
+    );
+    const receipt = await transaction.wait();
   }
   return (
     <div className="bg-white">
