@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Tab } from "@headlessui/react";
 import {
   WildCardAddress,
@@ -26,17 +26,29 @@ const product = {
 };
 
 export default function Stickerpack() {
-  const { web3 } = useMoralis();
+  const { Moralis, web3, user, enableWeb3, isWeb3Enabled } = useMoralis();
 
   //  CONTRACT CALL
   async function purchasePack() {
+    if (!isWeb3Enabled) enableWeb3();
+    const result = await Moralis.Cloud.run("getCard", {});
+    console.log(result);
+
+    const approveUSDC = new ethers.Contract(
+      USDCAddress,
+      USDCABI,
+      web3.getSigner()
+    );
+
+    let approval = await approveUSDC.approve(user.get("ethAddress"), 10);
+
     const WildcardContract = new ethers.Contract(
       WildCardAddress,
       WildCardABI,
       web3.getSigner()
     );
 
-    let transaction = await WildcardContract.mintCard();
+    let transaction = await WildcardContract.mintCard(result);
     const receipt = await transaction.wait();
   }
 

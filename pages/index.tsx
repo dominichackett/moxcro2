@@ -6,7 +6,11 @@ import Dashboard from "../src/components/Dashboard";
 import Login from "../src/components/Login";
 
 const Home: NextPage = () => {
-  const { isAuthenticated } = useMoralis();
+  const { isAuthenticated, enableWeb3, isWeb3Enabled } = useMoralis();
+
+  useEffect(() => {
+    if (!isWeb3Enabled) enableWeb3();
+  }, []);
 
   if (!isAuthenticated) return <Login />;
   return (
