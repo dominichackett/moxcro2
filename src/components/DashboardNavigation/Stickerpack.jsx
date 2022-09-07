@@ -42,16 +42,17 @@ const product = {
 
 export default function Stickerpack() {
   const { Moralis, web3, user } = useMoralis();
-  function purchasePack() {
+  async function purchasePack() {
     const WildcardContract = new ethers.Contract(
       WildCardAddress,
       WildCardABI,
       web3.getSigner()
     );
-    let transaction = await MeetingContract.mintCard(
+    let transaction = await MeetingContract
+      .mintCard
       // STRING
       // Calldata CARD
-    );
+      ();
     const receipt = await transaction.wait();
   }
   return (
