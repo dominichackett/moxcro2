@@ -29,10 +29,10 @@ export default function Stickerpack() {
   const { Moralis, web3, user, enableWeb3, isWeb3Enabled } = useMoralis();
 
   //  CONTRACT CALL
-  async function purchasePack() {
+  const purchasePack = async () => {
     if (!isWeb3Enabled) enableWeb3();
+
     const result = await Moralis.Cloud.run("getCard", {});
-    console.log(result);
 
     const approveUSDC = new ethers.Contract(
       USDCAddress,
@@ -40,7 +40,9 @@ export default function Stickerpack() {
       web3.getSigner()
     );
 
-    let approval = await approveUSDC.approve(user.get("ethAddress"), 10);
+    let approval = await approveUSDC.approve(WildCardAddress, 10000000);
+    await approval.wait();
+    console.log(approval);
 
     const WildcardContract = new ethers.Contract(
       WildCardAddress,
@@ -50,7 +52,7 @@ export default function Stickerpack() {
 
     let transaction = await WildcardContract.mintCard(result);
     const receipt = await transaction.wait();
-  }
+  };
 
   return (
     <div className="bg-white">
