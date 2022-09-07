@@ -47,7 +47,6 @@ export default function Stickerpack() {
   const purchasePack = async () => {
     if (!isWeb3Enabled) enableWeb3();
     const result = await Moralis.Cloud.run("getCard", {});
-    console.log(result);
 
     const WildcardContract = new ethers.Contract(
       WildCardAddress,
@@ -58,7 +57,7 @@ export default function Stickerpack() {
     // WORKS UP UNTIL HERE
 
     let transaction = await WildcardContract.mintCard(result);
-    const receipt = await transaction.wait();
+    await transaction.wait();
     console.log("test 4");
   };
 
