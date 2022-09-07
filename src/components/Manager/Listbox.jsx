@@ -7,14 +7,12 @@ export default function Example(props) {
   const { Moralis } = useMoralis();
   const [selectedPlayer, setSelectedPlayer] = useState();
   const [player, setPlayer] = useState([]);
-  // const [selectedPlayerId, setSelectedPlayerId] = useState(new Map());
 
   useEffect(() => {
     const Player = Moralis.Object.extend("Player");
     const query = new Moralis.Query(Player);
     query.find().then((results) => {
       let r = [];
-      // let rmap = new Map();
       results.forEach((result) => {
         r.push({
           id: result.id,
@@ -22,14 +20,9 @@ export default function Example(props) {
           Position: result.get("position"),
           NftId: result.get("nftId"),
           Number: result.get("number"),
-          // Image: result.get("image"),
-          // Team: result.get("team"),
         });
-        // rmap[result.get("Player")] = result.id;
       });
       setPlayer(r);
-      // setSelectedPlayerId(rmap);
-      console.log(player);
     });
   }, []);
 
