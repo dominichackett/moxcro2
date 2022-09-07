@@ -36,7 +36,7 @@ function classNames(...classes) {
 }
 
 export default function Account() {
-  const { user, Moralis } = useMoralis();
+  const { user, Moralis, isWeb3Enabled, enableWeb3 } = useMoralis();
   const [player, setPlayer] = useState([]);
   const [legendary, setLegendary] = useState([]);
   const [cards, setCards] = useState([
@@ -58,6 +58,7 @@ export default function Account() {
   ]);
 
   useEffect(() => {
+    if (!isWeb3Enabled) enableWeb3;
     //  GET ALL PLAYERS
     const Player = Moralis.Object.extend("Player");
     const query = new Moralis.Query(Player);

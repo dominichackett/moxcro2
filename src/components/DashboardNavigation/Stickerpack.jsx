@@ -26,14 +26,12 @@ const product = {
 };
 
 export default function Stickerpack() {
-  const { Moralis, web3, user, enableWeb3, isWeb3Enabled } = useMoralis();
+  const { Moralis, web3, enableWeb3, isWeb3Enabled } = useMoralis();
 
-  //  CONTRACT CALL
-  const purchasePack = async () => {
+  const [USDCApproved, setUSDCApproved] = useState(false);
+
+  const approveUSDC = async () => {
     if (!isWeb3Enabled) enableWeb3();
-
-    const result = await Moralis.Cloud.run("getCard", {});
-
     const approveUSDC = new ethers.Contract(
       USDCAddress,
       USDCABI,
@@ -41,8 +39,15 @@ export default function Stickerpack() {
     );
 
     let approval = await approveUSDC.approve(WildCardAddress, 10000000);
-    await approval.wait();
-    console.log(approval);
+    await approval.wait().then(() => {
+      setUSDCApproved(true);
+    });
+  };
+  //  Purchase Pack
+  const purchasePack = async () => {
+    if (!isWeb3Enabled) enableWeb3();
+    const result = await Moralis.Cloud.run("getCard", {});
+    console.log(result);
 
     const WildcardContract = new ethers.Contract(
       WildCardAddress,
@@ -50,8 +55,11 @@ export default function Stickerpack() {
       web3.getSigner()
     );
 
+    // WORKS UP UNTIL HERE
+
     let transaction = await WildcardContract.mintCard(result);
     const receipt = await transaction.wait();
+    console.log("test 4");
   };
 
   return (
@@ -99,12 +107,21 @@ export default function Stickerpack() {
 
             <div className="mt-6">
               <div className="sm:flex-col1 mt-10 flex">
-                <button
-                  onClick={purchasePack}
-                  className="flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-cyan-600 py-3 px-8 text-base font-medium text-white hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full"
-                >
-                  Purchase Pack
-                </button>
+                {!USDCApproved ? (
+                  <button
+                    onClick={approveUSDC}
+                    className="flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-cyan-600 py-3 px-8 text-base font-medium text-white hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full"
+                  >
+                    Approve USDC
+                  </button>
+                ) : (
+                  <button
+                    onClick={purchasePack}
+                    className="flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-cyan-600 py-3 px-8 text-base font-medium text-white hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full"
+                  >
+                    Purchase Pack
+                  </button>
+                )}
               </div>
             </div>
           </div>
