@@ -27,7 +27,6 @@ export default function Collection() {
         });
       });
       setPlayer(r);
-      console.log(player);
     });
   }, []);
   function purchasePlayer() {

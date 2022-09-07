@@ -57,8 +57,9 @@ export default function Stickerpack() {
     // WORKS UP UNTIL HERE
 
     let transaction = await WildcardContract.mintCard(result);
-    await transaction.wait();
-    console.log("test 4");
+    await transaction.wait().then(() => {
+      setUSDCApproved(false);
+    });
   };
 
   return (

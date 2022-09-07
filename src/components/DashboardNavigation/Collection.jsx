@@ -29,7 +29,6 @@ export default function Collection() {
       });
       setPlayer(r);
       // setSelectedPlayerId(rmap);
-      console.log(player);
     });
   }, []);
   function sellPlayer() {
@@ -86,7 +85,7 @@ export default function Collection() {
                 </div>
                 <button
                   onClick={sellPlayer}
-                  className="inline-flex z-50 items-center px-2 py-1 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
+                  className="inline-flex z-30 items-center px-2 py-1 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
                 >
                   Sell
                 </button>
