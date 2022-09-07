@@ -4,40 +4,25 @@ import {
   WildCardAddress,
   WildCardABI,
 } from "../../Contracts/WildCardNFTContract";
+
+import { USDCAddress, USDCABI } from "../../Contracts/USDCContract";
 import { ethers } from "ethers";
 import { useMoralis } from "react-moralis";
 
 const product = {
-  name: "Sticker Pack",
+  name: "Sticker Pack (6 Cards)",
   price: "$10",
   images: [
     {
       id: 1,
       name: "Pack",
-      //   src: "https://tailwindui.com/img/ecommerce-images/product-page-03-product-01.jpg",
       src: "/Playerpack.png",
     },
-    // More images...
   ],
 
   description: `
     <p>A Sticker Pack comes with 6 randomly selected World Cup Players. You need at least 11 Players to participate in the Manager Tournament. You can sell individual Players on the open Marketplace.</p>
   `,
-  details: [
-    {
-      name: "Features",
-      items: [
-        "Multiple strap configurations",
-        "Spacious interior with top zip",
-        "Leather handle and tabs",
-        "Interior dividers",
-        "Stainless strap loops",
-        "Double stitched construction",
-        "Water-resistant",
-      ],
-    },
-    // More sections...
-  ],
 };
 
 export default function Stickerpack() {
@@ -61,38 +46,6 @@ export default function Stickerpack() {
         <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
           {/* Image gallery */}
           <Tab.Group as="div" className="flex flex-col-reverse">
-            {/* Image selector */}
-            {/* <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none">
-              <Tab.List className="grid grid-cols-4 gap-6">
-                {product.images.map((image) => (
-                  <Tab
-                    key={image.id}
-                    className="relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4"
-                  >
-                    {({ selected }) => (
-                      <>
-                        <span className="sr-only"> {image.name} </span>
-                        <span className="absolute inset-0 overflow-hidden rounded-md">
-                          <img
-                            src={image.src}
-                            alt=""
-                            className="h-50 w-50 object-cover object-center"
-                          />
-                        </span>
-                        <span
-                          className={classNames(
-                            selected ? "ring-indigo-500" : "ring-transparent",
-                            "pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2"
-                          )}
-                          aria-hidden="true"
-                        />
-                      </>
-                    )}
-                  </Tab>
-                ))}
-              </Tab.List>
-            </div> */}
-
             <Tab.Panels className="">
               {product.images.map((image) => (
                 <Tab.Panel key={image.id}>
@@ -130,7 +83,7 @@ export default function Stickerpack() {
               />
             </div>
 
-            <form className="mt-6">
+            <div className="mt-6">
               <div className="sm:flex-col1 mt-10 flex">
                 <button
                   onClick={purchasePack}
@@ -139,13 +92,7 @@ export default function Stickerpack() {
                   Purchase Pack
                 </button>
               </div>
-            </form>
-
-            <section aria-labelledby="details-heading" className="mt-12">
-              <h2 id="details-heading" className="sr-only">
-                Additional details
-              </h2>
-            </section>
+            </div>
           </div>
         </div>
       </div>
