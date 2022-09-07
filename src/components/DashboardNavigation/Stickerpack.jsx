@@ -41,20 +41,20 @@ const product = {
 };
 
 export default function Stickerpack() {
-  const { Moralis, web3, user } = useMoralis();
+  const { web3 } = useMoralis();
+
+  //  CONTRACT CALL
   async function purchasePack() {
     const WildcardContract = new ethers.Contract(
       WildCardAddress,
       WildCardABI,
       web3.getSigner()
     );
-    let transaction = await MeetingContract
-      .mintCard
-      // STRING
-      // Calldata CARD
-      ();
+
+    let transaction = await WildcardContract.mintCard();
     const receipt = await transaction.wait();
   }
+
   return (
     <div className="bg-white">
       <div className="mx-auto w-8/12 max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
