@@ -32,8 +32,10 @@ export default function Collection() {
     fetchNFTs();
   }, []);
 
-  function sellPlayer() {
+  const [tokenId, setTokenId] = useState();
+  function sellPlayer(id) {
     setOpenSale(true);
+    setTokenId(id);
     if (openSale) {
       setOpenSale(false);
     }
@@ -46,7 +48,7 @@ export default function Collection() {
           Collection
         </h2>
 
-        {openSale && <SellModal player={player} />}
+        {openSale && <SellModal tokenId={tokenId} />}
 
         <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {player.map((card, cardIdx) => (
@@ -93,7 +95,9 @@ export default function Collection() {
                   {card.attributes[4].value}
                 </div>
                 <button
-                  onClick={sellPlayer}
+                  onClick={() => {
+                    sellPlayer(card.tokenId);
+                  }}
                   className="inline-flex z-30 items-center px-2 py-1 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
                 >
                   Sell

@@ -59,7 +59,6 @@ export default function SellModal(props) {
   // CONTRACT CALL SELL PLAYER
   const sellPlayer = async () => {
     const sellingPrice = document.getElementById("price").value;
-    console.log(sellingPrice);
 
     const sellPlayerContract = new ethers.Contract(
       MarketplaceAddress,
@@ -69,9 +68,10 @@ export default function SellModal(props) {
 
     let transaction = await sellPlayerContract.listToken(
       WildCardAddress,
-      props.player.tokenId,
+      parseInt(props.tokenId),
       1,
-      sellingPrice
+      // ethers.utils.parseEther(sellingPrice.toString())
+      "2"
     );
     await transaction
       .wait()
@@ -140,7 +140,7 @@ export default function SellModal(props) {
                             name="price"
                             id="price"
                             className="block w-full rounded-md border-gray-300 pl-7 pr-12 focus:border-cyan-500 focus:ring-cyan-500 sm:text-sm"
-                            placeholder="0.00"
+                            placeholder="0"
                             aria-describedby="price-currency"
                           />
                           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
