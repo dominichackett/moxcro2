@@ -1,37 +1,58 @@
+import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
-import SellModal from "../Modals/SellModal";
+import {
+  MarketplaceAddress,
+  MarketplaceABI,
+} from "../../Contracts/MarketplaceContract";
 
-export default function Collection() {
-  const { Moralis } = useMoralis();
-  const [player, setPlayer] = useState([]);
-
-  //   const [openSale, setOpenSale] = useState(false);
+export default function OpenMarket() {
+  const { Moralis, web3, enableWeb3, isWeb3Enabled } = useMoralis();
+  const [marketplaceListings, setMarketplaceListings] = useState([]);
 
   useEffect(() => {
-    const Player = Moralis.Object.extend("Player");
-    const query = new Moralis.Query(Player);
+    const MarketPlace = Moralis.Object.extend("MarketPlace");
+    const query = new Moralis.Query(MarketPlace);
     query.find().then((results) => {
       let r = [];
-      // let rmap = new Map();
       results.forEach((result) => {
         r.push({
-          id: result.id,
-          Name: result.get("name"),
-          Position: result.get("position"),
-          NftId: result.get("nftId"),
-          Number: result.get("number"),
-          Image: result.get("image"),
-          Team: result.get("team"),
-          Type: result.get("type"),
+          ObjectId: result.get("objectId"),
+          Price: result.get("pricePerToken"),
+          Amount: result.get("amount"),
+          TokenId: result.get("tokenId"),
+          ListingId: result.get("listingId"),
+          Seller: result.get("seller"),
+          Contract: result.get("contractAddress"),
         });
       });
-      setPlayer(r);
+      setMarketplaceListings(r);
+      console.log(r);
+
+      //  HERE WE HAVE TO FETCH THE FOLLOWING INFOS:
+      // IMAGE FROM PLAYER
+      // TYPE FROM PLAYER
+      // TEAM, POSITION
     });
   }, []);
-  function purchasePlayer() {
-    // CONTRACT CALL PURCHASE PLAYER
-  }
+
+  const purchasePlayer = async () => {
+    if (!isWeb3Enabled) enableWeb3();
+    const purchaseContract = new ethers.Contract(
+      MarketplaceAddress,
+      MarketplaceABI,
+      web3.getSigner()
+    );
+    let transaction = await purchaseContract.purchaseToken(
+      marketplaceListings.ListingId,
+      marketplaceListings.Amount
+    );
+    await transaction.wait().then(() => {
+      alert("successful");
+    });
+
+    // A B I : "function purchaseToken(uint256 listingId, uint256 amount) public payable",
+  };
 
   return (
     <div className="bg-white">
@@ -40,10 +61,8 @@ export default function Collection() {
           Marketplace
         </h2>
 
-        {/* {openSale && <SellModal />} */}
-
         <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          {player.map((card, cardIdx) => (
+          {marketplaceListings.map((card, cardIdx) => (
             <div
               key={cardIdx}
               className="group relative ring-gray-500 ring-1 rounded-lg pb-2"
@@ -62,7 +81,6 @@ export default function Collection() {
                       {card.Name}
                     </div>
                   </div>
-                  {/* <p className="mt-1 text-sm text-gray-500">{product.color}</p> */}
                 </div>
                 <div className="text-md font-medium cursor-pointer text-gray-900">
                   {card.Number}
@@ -79,10 +97,12 @@ export default function Collection() {
                   {card.Type}
                 </div>
                 <button
-                  onClick={purchasePlayer}
+                  onClick={() => {
+                    purchasePlayer(card.TokenId);
+                  }}
                   className="inline-flex z-50 items-center px-2 py-1 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
                 >
-                  120 CRO
+                  {card.Price} CRO
                 </button>
               </div>
             </div>

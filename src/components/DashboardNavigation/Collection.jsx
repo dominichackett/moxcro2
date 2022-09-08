@@ -4,13 +4,10 @@ import SellModal from "../Modals/SellModal";
 
 export default function Collection() {
   const { Web3API } = useMoralisWeb3Api();
-
   const { Moralis, enableWeb3, isWeb3Enabled, user } = useMoralis();
+
   const [player, setPlayer] = useState([]);
-
   const [openSale, setOpenSale] = useState(false);
-
-  const [listed, setListed] = useState();
   const [listedUserTokens, setListedUserTokens] = useState(new Map());
 
   useEffect(() => {
