@@ -32,27 +32,6 @@ export default function Collection() {
     fetchNFTs();
   }, []);
 
-  // useEffect(() => {
-  //   const Player = Moralis.Object.extend("Player");
-  //   const query = new Moralis.Query(Player);
-  //   query.find().then((results) => {
-  //     let r = [];
-  //     results.forEach((result) => {
-  //       r.push({
-  //         id: result.id,
-  //         Name: result.get("name"),
-  //         Position: result.get("position"),
-  //         NftId: result.get("nftId"),
-  //         Number: result.get("number"),
-  //         Image: result.get("image"),
-  //         Team: result.get("team"),
-  //         Type: result.get("type"),
-  //       });
-  //     });
-  //     setPlayer(r);
-  //   });
-  // }, []);
-
   function sellPlayer() {
     setOpenSale(true);
     if (openSale) {
@@ -67,7 +46,7 @@ export default function Collection() {
           Collection
         </h2>
 
-        {openSale && <SellModal />}
+        {openSale && <SellModal player={player} />}
 
         <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {player.map((card, cardIdx) => (

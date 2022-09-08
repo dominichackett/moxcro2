@@ -10,7 +10,7 @@ import {
   ChevronRightIcon,
 } from "@heroicons/react/solid";
 import { useEffect, useState } from "react";
-import { useMoralis } from "react-moralis";
+import { useMoralis, useMoralisWeb3Api } from "react-moralis";
 
 const transactions = [
   {
@@ -36,6 +36,8 @@ function classNames(...classes) {
 }
 
 export default function Account() {
+  const { Web3API } = useMoralisWeb3Api();
+
   const { user, Moralis, isWeb3Enabled, enableWeb3 } = useMoralis();
   const [player, setPlayer] = useState([]);
   const [legendary, setLegendary] = useState([]);
@@ -58,9 +60,51 @@ export default function Account() {
     },
   ]);
 
+  // useEffect(() => {
+  //   if (!isWeb3Enabled) enableWeb3();
+  //   const fetchNFTs = async () => {
+  //     const testnetNFTs = await Web3API.account.getNFTs({
+  //       chain: "cronos testnet",
+  //     });
+  //     let _players = [];
+  //     testnetNFTs.result.forEach(async (nft) => {
+  //       if (nft.token_address == "0x396fb51aefcdef80e4b2514cba310787f3ffa74d") {
+  //         const tokenIdMetadata = await Moralis.Cloud.run("Metadata", {
+  //           tokenId: nft.token_id,
+  //         });
+  //         _players.push(tokenIdMetadata);
+  //         console.log(_players);
+  //       }
+  //     });
+  //     setPlayer(_players);
+  //     console.log(player);
+  //   };
+  //   fetchNFTs();
+  // }, []);
+
   useEffect(() => {
     if (!isWeb3Enabled) enableWeb3();
     //  GET ALL PLAYERS
+
+    const fetchNFTs = async () => {
+      const testnetNFTs = await Web3API.account.getNFTs({
+        chain: "cronos testnet",
+      });
+      let _players = [];
+      testnetNFTs.result.forEach(async (nft) => {
+        if (nft.token_address == "0x396fb51aefcdef80e4b2514cba310787f3ffa74d") {
+          const tokenIdMetadata = await Moralis.Cloud.run("Metadata", {
+            tokenId: nft.token_id,
+          });
+          _players.push(tokenIdMetadata);
+          console.log(_players);
+        }
+      });
+      setPlayer(_players);
+      console.log(player);
+    };
+    fetchNFTs();
+
     const Player = Moralis.Object.extend("Player");
     const query = new Moralis.Query(Player);
     query.find().then((results) => {
@@ -70,8 +114,9 @@ export default function Account() {
           id: result.id,
           Name: result.get("name"),
         });
-        setPlayer(r);
+        // setPlayer(r);
       });
+
       //  GET ONLY LEGENDARY PLAYERS
       const Player2 = Moralis.Object.extend("Player");
       const query2 = new Moralis.Query(Player2);
@@ -86,9 +131,10 @@ export default function Account() {
       //  QUERY LEADERBOARD
       const _User = new Moralis.Object.extend("_User");
       const _user = new _User();
-      const Leaderboard = Moralis.Object.extend("Leaderboard");
-      const query3 = new Moralis.Query(Leaderboard);
-      _user.set("objectId", user.id);
+      const LeaderBoard = Moralis.Object.extend("LeaderBoard");
+      const query3 = new Moralis.Query(LeaderBoard);
+      // _user.set("objectId", user.id);
+      _user.id = user.id;
       query3.equalTo("user", _user);
       query3.first().then((results) => {
         console.log(results);
