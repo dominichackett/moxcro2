@@ -1,4 +1,4 @@
-export const MarketplaceAddress = "0x3024287B7f2365cdE374265Aa6040f4237f19786";
+export const MarketplaceAddress = "0x14936EaA491B769fDC7f5bfbF961Faa88A791C78";
 export const MarketplaceABI = [
   "function listToken(address contractAddress, uint256 tokenId, uint256 amount, uint256 price)",
   "function purchaseToken(uint256 listingId, uint256 amount) public payable",

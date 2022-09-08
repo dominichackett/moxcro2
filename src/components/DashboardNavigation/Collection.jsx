@@ -5,10 +5,13 @@ import SellModal from "../Modals/SellModal";
 export default function Collection() {
   const { Web3API } = useMoralisWeb3Api();
 
-  const { Moralis, enableWeb3, isWeb3Enabled } = useMoralis();
+  const { Moralis, enableWeb3, isWeb3Enabled, user } = useMoralis();
   const [player, setPlayer] = useState([]);
 
   const [openSale, setOpenSale] = useState(false);
+
+  const [listed, setListed] = useState();
+  const [listedUserTokens, setListedUserTokens] = useState(new Map());
 
   useEffect(() => {
     if (!isWeb3Enabled) enableWeb3();
@@ -23,13 +26,26 @@ export default function Collection() {
             tokenId: nft.token_id,
           });
           _players.push(tokenIdMetadata);
-          console.log(_players);
         }
       });
       setPlayer(_players);
-      console.log(player);
     };
     fetchNFTs();
+  }, [openSale]);
+
+  useEffect(() => {
+    const TokenListed = Moralis.Object.extend("TokenListed");
+    const query = new Moralis.Query(TokenListed);
+    query.equalTo("confirmed", true);
+    query.equalTo("seller", user.get("ethAddress").toLowerCase());
+    query.find().then((results) => {
+      console.log(results);
+      let listing = new Map();
+      results.forEach((result) => {
+        listing[result.get("tokenId")] = true;
+      });
+      setListedUserTokens(listing);
+    });
   }, []);
 
   const [tokenId, setTokenId] = useState();
@@ -94,14 +110,23 @@ export default function Collection() {
                 >
                   {card.attributes[4].value}
                 </div>
-                <button
-                  onClick={() => {
-                    sellPlayer(card.tokenId);
-                  }}
-                  className="inline-flex z-30 items-center px-2 py-1 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
-                >
-                  Sell
-                </button>
+                {!listedUserTokens[card.tokenId] ? (
+                  <button
+                    onClick={() => {
+                      sellPlayer(card.tokenId);
+                    }}
+                    className="inline-flex z-30 items-center px-2 py-1 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
+                  >
+                    Sell
+                  </button>
+                ) : (
+                  <button
+                    disabled="true"
+                    className="inline-flex z-30 items-center px-2 py-1 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
+                  >
+                    Listed
+                  </button>
+                )}
               </div>
             </div>
           ))}

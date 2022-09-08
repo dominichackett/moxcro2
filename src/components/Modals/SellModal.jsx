@@ -16,7 +16,8 @@ import { useMoralis } from "react-moralis";
 export default function SellModal(props) {
   const { web3, Moralis, user } = useMoralis();
   const [open, setOpen] = useState(true);
-  const [approveSale, setApproveSale] = useState(true);
+
+  const [approveSale, setApproveSale] = useState();
 
   const cancelButtonRef = useRef(null);
 
@@ -27,34 +28,29 @@ export default function SellModal(props) {
       WildCardABI,
       web3.getSigner()
     );
-    // let approval = await approveMarketSale.setApprovalForAll(
-    //   MarketplaceAddress,
-    //   true
-    // );
-    // await approval.wait();
+    let approval = await approveMarketSale.setApprovalForAll(
+      MarketplaceAddress,
+      true
+    );
+    await approval.wait().then(() => setApproveSale(true));
   };
 
-  // .isApprovedForAll(user.get("ethAddress"), MarketplaceAddress)
-  // .then(() => setApproveSale(true));
-  // CHECK IF PLAYERS HAVE BEEN APPROVED FOR SALE
-
-  //   const usdcContract = new ethers.Contract(USDCAddress,USDCABI,web3.getSigner());
-  //         let transaction = await usdcContract.allowance(
-  //           user.get('ethAddress'),FounderNFT
-  //         );
-  //         //const value = transaction;
-  //         setGotApprovedUSDC(true)
-  //         setApprovedUSDC((transaction.gt(0) ? true: false));
-  //         console.log(transaction.gt(0))
-
-  //   useEffect(() => {
-  //     const
-  // if() {
-
-  //   setApproveSale(true)
-  // }
-
-  //   }, []);
+  //  CHECK IF APPROVAL HAS BEEN DONE
+  useEffect(() => {
+    const approvalForAll = async () => {
+      const approveMarketSale = new ethers.Contract(
+        WildCardAddress,
+        WildCardABI,
+        web3.getSigner()
+      );
+      let approval = await approveMarketSale.isApprovedForAll(
+        user.get("ethAddress"),
+        MarketplaceAddress
+      );
+      setApproveSale(approval);
+    };
+    approvalForAll();
+  }, []);
 
   // CONTRACT CALL SELL PLAYER
   const sellPlayer = async () => {
