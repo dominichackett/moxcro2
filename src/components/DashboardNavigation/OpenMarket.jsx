@@ -19,7 +19,7 @@ export default function OpenMarket() {
       let r = [];
       results.forEach((result) => {
         r.push({
-          ObjectId: result.get("objectId"),
+          ObjectId: result.id,
           Price: result.get("pricePerToken"),
           Amount: result.get("amount"),
           TokenId: result.get("tokenId"),
@@ -36,12 +36,6 @@ export default function OpenMarket() {
       });
       setMarketplaceListings(r);
       console.log(r);
-
-      //  HERE WE HAVE TO FETCH THE FOLLOWING INFOS:
-      // IMAGE FROM PLAYER
-      // TYPE FROM PLAYER
-      // TEAM, POSITION
-      // NAME
     });
   }, []);
 
@@ -59,8 +53,6 @@ export default function OpenMarket() {
     await transaction.wait().then(() => {
       alert("successful");
     });
-
-    // A B I : "function purchaseToken(uint256 listingId, uint256 amount) public payable",
   };
 
   function playerPosition(pos) {

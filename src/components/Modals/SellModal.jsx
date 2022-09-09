@@ -66,8 +66,8 @@ export default function SellModal(props) {
       WildCardAddress,
       parseInt(props.tokenId),
       1,
-      // ethers.utils.parseEther(sellingPrice.toString())
-      "2"
+      ethers.utils.parseEther(sellingPrice.toString())
+      // "2"
     );
     await transaction
       .wait()
