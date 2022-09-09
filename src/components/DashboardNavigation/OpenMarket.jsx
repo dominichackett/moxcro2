@@ -5,22 +5,31 @@ import {
   MarketplaceAddress,
   MarketplaceABI,
 } from "../../Contracts/MarketplaceContract";
+import Notification from '../Notification/Notification'
 
 export default function OpenMarket() {
   const { Moralis, web3, enableWeb3, isWeb3Enabled } = useMoralis();
   const [marketplaceListings, setMarketplaceListings] = useState([]);
-
+  const [show,setShow] = useState(false);
+  const [notificationTitle,setNotificationTitle] = useState()
+  const[notificationDescription,setNotificationDescription] = useState()
+  const [dialogType,setDialogType] = useState(1)
+  const [refreshSearch,setRefreshSearch]  = useState(new Date())
+  const close = async ()=>{
+    setShow(false)
+  }
   useEffect(() => {
     const MarketPlace = Moralis.Object.extend("MarketPlace");
     const query = new Moralis.Query(MarketPlace);
     query.include("player");
     query.include("player.team");
+    query.greaterThan("amount",0);
     query.find().then((results) => {
       let r = [];
       results.forEach((result) => {
         r.push({
           ObjectId: result.id,
-          Price: result.get("pricePerToken"),
+          Price: ethers.utils.formatEther(result.get("pricePerToken")),
           Amount: result.get("amount"),
           TokenId: result.get("tokenId"),
           ListingId: result.get("listingId"),
@@ -28,7 +37,7 @@ export default function OpenMarket() {
           Contract: result.get("contractAddress"),
           Name: result.get("player").get("name"),
           Team: result.get("player").get("team").get("name"),
-          Type: result.get("player").get("type"),
+          Type: result.get("player").get("type").toUpperCase(),
           Position: playerPosition(result.get("player").get("position")),
           Image: result.get("player").get("image"),
           Number: result.get("player").get("number"),
@@ -37,22 +46,35 @@ export default function OpenMarket() {
       setMarketplaceListings(r);
       console.log(r);
     });
-  }, []);
+  }, [refreshSearch]);
 
-  const purchasePlayer = async () => {
+  const purchasePlayer = async (_player) => {
     if (!isWeb3Enabled) enableWeb3();
     const purchaseContract = new ethers.Contract(
       MarketplaceAddress,
       MarketplaceABI,
       web3.getSigner()
     );
+
+    try { 
     let transaction = await purchaseContract.purchaseToken(
-      marketplaceListings.ListingId,
-      marketplaceListings.Amount
+      _player.ListingId,
+      1,{value: ethers.utils.parseEther(_player.Price)}
     );
-    await transaction.wait().then(() => {
-      alert("successful");
-    });
+
+  
+    await transaction.wait();
+    setDialogType(1); //Success
+    setNotificationTitle("Purchase Player Successful")
+    setNotificationDescription(`Your purchase was successful.`)
+    setShow(true)
+    setRefreshSearch(new Date());
+  }catch(error){
+    setDialogType(2); //Failed
+      setNotificationTitle("Purchase Player Failed")
+      setNotificationDescription( error.data ? error.data.message:error.message)
+      setShow(true)
+  }
   };
 
   function playerPosition(pos) {
@@ -122,7 +144,7 @@ export default function OpenMarket() {
                 </div>
                 <button
                   onClick={() => {
-                    purchasePlayer(card.TokenId);
+                    purchasePlayer(card);
                   }}
                   className="inline-flex z-50 items-center px-2 py-1 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
                 >
@@ -133,6 +155,8 @@ export default function OpenMarket() {
           ))}
         </div>
       </div>
+      <Notification type = {dialogType} show={show} close={close} title={notificationTitle} description = {notificationDescription} />
+
     </div>
   );
 }

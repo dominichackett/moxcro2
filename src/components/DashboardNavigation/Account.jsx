@@ -41,7 +41,7 @@ export default function Account() {
   const { user, Moralis, isWeb3Enabled, enableWeb3 } = useMoralis();
   const [player, setPlayer] = useState([]);
   const [legendary, setLegendary] = useState([]);
-  const [totalPoints, setTotalPoints] = useState();
+  const [totalPoints, setTotalPoints] = useState(0);
   const [cards, setCards] = useState([
     {
       name: "Total Points",
@@ -138,6 +138,7 @@ export default function Account() {
       query3.equalTo("user", _user);
       query3.first().then((results) => {
         console.log(results);
+        if(results)
         setTotalPoints(results.get("points"));
       });
       //  SET CARD DETAILS

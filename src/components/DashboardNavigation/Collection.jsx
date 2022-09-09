@@ -28,7 +28,7 @@ export default function Collection() {
       setPlayer(_players);
     };
     fetchNFTs();
-  }, [openSale]);
+  }, []);
 
   useEffect(() => {
     const TokenListed = Moralis.Object.extend("TokenListed");
@@ -105,7 +105,7 @@ export default function Collection() {
                       : "text-gray-500"
                   }`}
                 >
-                  {card.attributes[4].value}
+                  {card.attributes[4].value.toUpperCase()}
                 </div>
                 {!listedUserTokens[card.tokenId] ? (
                   <button

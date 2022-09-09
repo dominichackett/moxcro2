@@ -12,6 +12,7 @@ import {
   WildCardABI,
 } from "../../Contracts/WildCardNFTContract";
 import { useMoralis } from "react-moralis";
+import Notification from '../Notification/Notification'
 
 export default function SellModal(props) {
   const { web3, Moralis, user } = useMoralis();
@@ -20,7 +21,11 @@ export default function SellModal(props) {
   const [approveSale, setApproveSale] = useState();
 
   const cancelButtonRef = useRef(null);
-
+  const [show,setShow] = useState(false);
+  const [notificationTitle,setNotificationTitle] = useState()
+  const[notificationDescription,setNotificationDescription] = useState()
+  const [dialogType,setDialogType] = useState(1)
+ 
   // APPROVE SALES FOR MARKETPLACE
   const approveSales = async () => {
     const approveMarketSale = new ethers.Contract(
@@ -28,13 +33,27 @@ export default function SellModal(props) {
       WildCardABI,
       web3.getSigner()
     );
+    try {
     let approval = await approveMarketSale.setApprovalForAll(
       MarketplaceAddress,
       true
     );
-    await approval.wait().then(() => setApproveSale(true));
-  };
+    await approval.wait()
+     setApproveSale(true)
+     setDialogType(1); //Success
+      setNotificationTitle("Approve Sale Successful")
+      setNotificationDescription(`Sale approval was successful.`)
+      setShow(true)
 
+  }catch(error)
+  {
+    setDialogType(2); //Failed
+    setNotificationTitle("Approve Sale Failed")
+    setNotificationDescription( error.data ? error.data.message:error.message)
+    setShow(true)
+  }
+
+} 
   //  CHECK IF APPROVAL HAS BEEN DONE
   useEffect(() => {
     const approvalForAll = async () => {
@@ -69,11 +88,28 @@ export default function SellModal(props) {
       ethers.utils.parseEther(sellingPrice.toString())
       // "2"
     );
+
+
+   try {
     await transaction
       .wait()
-      .then(() => alert("player successfully listed on the marketplace"));
+      setOpen(false);
+      setDialogType(1); //Success
+      setNotificationTitle("List Player Successful")
+      setNotificationDescription(`Your listing was successful.`)
+      setShow(true)
+
+   }catch(error)
+   {
     setOpen(false);
-  };
+
+     setDialogType(2); //Failed
+     setNotificationTitle("List Player Failed")
+     setNotificationDescription( error.data ? error.data.message:error.message)
+     setShow(true)
+
+   }
+}
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -183,6 +219,8 @@ export default function SellModal(props) {
             </Transition.Child>
           </div>
         </div>
+        <Notification type = {dialogType} show={show} close={close} title={notificationTitle} description = {notificationDescription} />
+
       </Dialog>
     </Transition.Root>
   );
