@@ -13,6 +13,8 @@ export default function OpenMarket() {
   useEffect(() => {
     const MarketPlace = Moralis.Object.extend("MarketPlace");
     const query = new Moralis.Query(MarketPlace);
+    query.include("player");
+    query.include("player.team");
     query.find().then((results) => {
       let r = [];
       results.forEach((result) => {
@@ -24,6 +26,12 @@ export default function OpenMarket() {
           ListingId: result.get("listingId"),
           Seller: result.get("seller"),
           Contract: result.get("contractAddress"),
+          Name: result.get("player").get("name"),
+          Team: result.get("player").get("team").get("name"),
+          Type: result.get("player").get("type"),
+          Position: playerPosition(result.get("player").get("position")),
+          Image: result.get("player").get("image"),
+          Number: result.get("player").get("number"),
         });
       });
       setMarketplaceListings(r);
@@ -33,6 +41,7 @@ export default function OpenMarket() {
       // IMAGE FROM PLAYER
       // TYPE FROM PLAYER
       // TEAM, POSITION
+      // NAME
     });
   }, []);
 
@@ -54,6 +63,25 @@ export default function OpenMarket() {
     // A B I : "function purchaseToken(uint256 listingId, uint256 amount) public payable",
   };
 
+  function playerPosition(pos) {
+    switch (pos) {
+      case 0:
+        return "Goalkeeper";
+        break;
+
+      case 1:
+        return "Defender";
+        break;
+      case 2:
+        return "Midfielder";
+        break;
+
+      case 3:
+        return "Forward";
+        break;
+    }
+  }
+
   return (
     <div className="bg-white">
       <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
@@ -69,7 +97,7 @@ export default function OpenMarket() {
             >
               <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-t-md overflow-hidden lg:h-80 lg:aspect-none">
                 <img
-                  src={"/CR7.png"}
+                  src={card.Image}
                   className="w-full h-full object-center object-cover lg:w-full lg:h-full"
                 />
               </div>
@@ -79,6 +107,10 @@ export default function OpenMarket() {
                     <div>
                       <span aria-hidden="true" className="absolute inset-0" />
                       {card.Name}
+                    </div>
+                    <div className="flex space-x-8 flex-row w-full items-center justify-center">
+                      <div className="font-bold">{card.Team}</div>
+                      <div className="text-xs">[{card.Position}]</div>
                     </div>
                   </div>
                 </div>
