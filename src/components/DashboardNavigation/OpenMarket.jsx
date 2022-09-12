@@ -5,25 +5,26 @@ import {
   MarketplaceAddress,
   MarketplaceABI,
 } from "../../Contracts/MarketplaceContract";
-import Notification from '../Notification/Notification'
+import Notification from "../Notification/Notification";
 
 export default function OpenMarket() {
   const { Moralis, web3, enableWeb3, isWeb3Enabled } = useMoralis();
   const [marketplaceListings, setMarketplaceListings] = useState([]);
-  const [show,setShow] = useState(false);
-  const [notificationTitle,setNotificationTitle] = useState()
-  const[notificationDescription,setNotificationDescription] = useState()
-  const [dialogType,setDialogType] = useState(1)
-  const [refreshSearch,setRefreshSearch]  = useState(new Date())
-  const close = async ()=>{
-    setShow(false)
-  }
+  const [show, setShow] = useState(false);
+  const [notificationTitle, setNotificationTitle] = useState();
+  const [notificationDescription, setNotificationDescription] = useState();
+  const [dialogType, setDialogType] = useState(1);
+  const [refreshSearch, setRefreshSearch] = useState(new Date());
+  const close = async () => {
+    setShow(false);
+  };
   useEffect(() => {
     const MarketPlace = Moralis.Object.extend("MarketPlace");
     const query = new Moralis.Query(MarketPlace);
     query.include("player");
     query.include("player.team");
-    query.greaterThan("amount",0);
+    // query.include("player.type");
+    query.greaterThan("amount", 0);
     query.find().then((results) => {
       let r = [];
       results.forEach((result) => {
@@ -56,25 +57,27 @@ export default function OpenMarket() {
       web3.getSigner()
     );
 
-    try { 
-    let transaction = await purchaseContract.purchaseToken(
-      _player.ListingId,
-      1,{value: ethers.utils.parseEther(_player.Price)}
-    );
+    try {
+      let transaction = await purchaseContract.purchaseToken(
+        _player.ListingId,
+        1,
+        { value: ethers.utils.parseEther(_player.Price) }
+      );
 
-  
-    await transaction.wait();
-    setDialogType(1); //Success
-    setNotificationTitle("Purchase Player Successful")
-    setNotificationDescription(`Your purchase was successful.`)
-    setShow(true)
-    setRefreshSearch(new Date());
-  }catch(error){
-    setDialogType(2); //Failed
-      setNotificationTitle("Purchase Player Failed")
-      setNotificationDescription( error.data ? error.data.message:error.message)
-      setShow(true)
-  }
+      await transaction.wait();
+      setDialogType(1); //Success
+      setNotificationTitle("Purchase Player Successful");
+      setNotificationDescription(`Your purchase was successful.`);
+      setShow(true);
+      setRefreshSearch(new Date());
+    } catch (error) {
+      setDialogType(2); //Failed
+      setNotificationTitle("Purchase Player Failed");
+      setNotificationDescription(
+        error.data ? error.data.message : error.message
+      );
+      setShow(true);
+    }
   };
 
   function playerPosition(pos) {
@@ -135,7 +138,7 @@ export default function OpenMarket() {
               <div className="flex items-center justify-around  mt-2">
                 <div
                   className={`inline-flex items-center px-2 py-1 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 ${
-                    card.Type == "legendary"
+                    card.Type == "LEGENDARY"
                       ? "text-yellow-500"
                       : "text-gray-500"
                   }`}
@@ -155,8 +158,13 @@ export default function OpenMarket() {
           ))}
         </div>
       </div>
-      <Notification type = {dialogType} show={show} close={close} title={notificationTitle} description = {notificationDescription} />
-
+      <Notification
+        type={dialogType}
+        show={show}
+        close={close}
+        title={notificationTitle}
+        description={notificationDescription}
+      />
     </div>
   );
 }

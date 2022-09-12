@@ -2,7 +2,7 @@
 module.exports = {
   reactStrictMode: true,
   images: {
-    domains: ["ipfs.moralis.io"],
+    domains: ["ipfs.moralis.io", "www.footballdatabase.eu"],
   },
   env: {
     // APP ID & SERVERURL

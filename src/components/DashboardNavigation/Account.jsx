@@ -138,8 +138,7 @@ export default function Account() {
       query3.equalTo("user", _user);
       query3.first().then((results) => {
         console.log(results);
-        if(results)
-        setTotalPoints(results.get("points"));
+        if (results) setTotalPoints(results.get("points"));
       });
       //  SET CARD DETAILS
       setCards([

@@ -2,18 +2,32 @@ import { Fragment, useEffect, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
 import { useMoralis } from "react-moralis";
-import Image from "next/image";
 
-export default function Listboxx(props) {
-  const [selectedPlayer, setSelectedPlayer] = useState();
+export default function TeamListbox(props) {
+  const { Moralis } = useMoralis();
+  const [teams, setTeams] = useState([]);
+
+  const [selectedTeam, setSelectedTeam] = useState();
+
+  useEffect(() => {
+    const Team = Moralis.Object.extend("Team");
+    const query = new Moralis.Query(Team);
+
+    query.find().then((results) => {
+      results.forEach((result) => {
+        setTeams(result);
+        console.log(teams);
+      });
+    });
+  }, []);
 
   return (
     <div className="">
-      <Listbox value={selectedPlayer} onChange={setSelectedPlayer}>
+      <Listbox value={selectedTeam} onChange={setSelectedTeam}>
         <div className="relative mt-1">
           <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-green-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-green-300 sm:text-sm">
             <span className="block truncate">
-              {selectedPlayer ? selectedPlayer : "Choose Player"}
+              {selectedTeam ? selectedTeam : "Choose Player"}
             </span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
               <SelectorIcon
@@ -29,7 +43,7 @@ export default function Listboxx(props) {
             leaveTo="opacity-0"
           >
             <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-              {props.player.map((person, index) => (
+              {teams.map((team, index) => (
                 <Listbox.Option
                   key={index}
                   className={({ active }) =>
@@ -37,19 +51,19 @@ export default function Listboxx(props) {
                       active ? "bg-green-100 text-green-900" : "text-gray-900"
                     }`
                   }
-                  value={person.name + " " + person.attributes[0].value}
+                  value={team.name}
                 >
-                  {({ selectedPlayer }) => (
+                  {({ selectedTeam }) => (
                     <>
                       <span
                         className={`block truncate ${
-                          selectedPlayer ? "font-medium" : "font-normal"
+                          selectedTeam ? "font-medium" : "font-normal"
                         }`}
                       >
                         <img src={person.image} width={20} height={20} />
-                        {person.name + " " + person.attributes[0].value}
+                        {person.name}
                       </span>
-                      {selectedPlayer ? (
+                      {selectedTeam ? (
                         <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-green-600">
                           <CheckIcon className="h-5 w-5" aria-hidden="true" />
                         </span>

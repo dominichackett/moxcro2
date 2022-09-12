@@ -7,6 +7,7 @@ import {
   HomeIcon,
   MenuAlt1Icon,
   ScaleIcon,
+  UserGroupIcon,
   XIcon,
 } from "@heroicons/react/outline";
 import { ChevronDownIcon } from "@heroicons/react/solid";
@@ -16,6 +17,7 @@ import Image from "next/image";
 import Manager from "./DashboardNavigation/Manager";
 import Collection from "./DashboardNavigation/Collection";
 import Marketplace from "./DashboardNavigation/Marketplace";
+import Teams from "./DashboardNavigation/Teams";
 import { useChain, useMoralis } from "react-moralis";
 
 const navigation = [
@@ -23,6 +25,7 @@ const navigation = [
   { name: "Manager", href: "#", icon: ClockIcon, current: false },
   { name: "Collection", href: "#", icon: ScaleIcon, current: false },
   { name: "Marketplace", href: "#", icon: CreditCardIcon, current: false },
+  { name: "Teams", href: "#", icon: UserGroupIcon, current: false },
 ];
 
 function classNames(...classes) {
@@ -336,6 +339,9 @@ export default function Dashboard() {
             </div>
             <div hidden={selectedTab != "Marketplace"}>
               <Marketplace />
+            </div>
+            <div hidden={selectedTab != "Teams"}>
+              <Teams />
             </div>
           </main>
         </div>
