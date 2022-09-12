@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useMoralis, useMoralisWeb3Api } from "react-moralis";
 import SellModal from "../Modals/SellModal";
-import TeamListbox from "../Manager/Listbox";
+import TeamList from "./TeamList";
 
 export default function Collection() {
   const { Web3API } = useMoralisWeb3Api();
@@ -10,9 +10,6 @@ export default function Collection() {
   const [player, setPlayer] = useState([]);
   const [openSale, setOpenSale] = useState(false);
   const [listedUserTokens, setListedUserTokens] = useState(new Map());
-  const [teams, setTeams] = useState([]);
-
-  //
 
   const [tokenId, setTokenId] = useState();
   function sellPlayer(id) {
@@ -29,7 +26,8 @@ export default function Collection() {
         <h2 className="text-2xl font-bold tracking-tight text-gray-900">
           ALL TEAMS
         </h2>
-        <TeamListbox />
+        {/* <TeamListbox /> */}
+        <TeamList />
 
         {openSale && <SellModal tokenId={tokenId} />}
 

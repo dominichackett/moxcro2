@@ -1,37 +1,44 @@
 import { Fragment, useEffect, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
-import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
 import { useMoralis } from "react-moralis";
 
-export default function TeamListbox(props) {
-  const { Moralis } = useMoralis();
-  const [teams, setTeams] = useState([]);
+const people = [
+  { name: "Wade Cooper" },
+  { name: "Arlene Mccoy" },
+  { name: "Devon Webb" },
+  { name: "Tom Cook" },
+  { name: "Tanya Fox" },
+  { name: "Hellen Schmidt" },
+];
 
-  const [selectedTeam, setSelectedTeam] = useState();
+export default function TeamList() {
+  const { Moralis } = useMoralis();
+  const [selected, setSelected] = useState(people[0]);
+  const [teams, setTeams] = useState([]);
 
   useEffect(() => {
     const Team = Moralis.Object.extend("Team");
     const query = new Moralis.Query(Team);
     query.find().then((results) => {
-      results.forEach((result) => {});
-      console.log(teams);
+      let r = [];
+      results.forEach((result) => {
+        r.push({
+          id: result.id,
+          Name: result.get("name"),
+        });
+      });
+      setTeams(r);
     });
     console.log(teams);
   }, []);
 
   return (
-    <div className="">
-      <Listbox value={selectedTeam} onChange={setSelectedTeam}>
+    <div className=" w-72">
+      <Listbox value={selected} onChange={setSelected}>
         <div className="relative mt-1">
-          <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-green-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-green-300 sm:text-sm">
+          <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
             <span className="block truncate">
-              {selectedTeam ? selectedTeam : "Choose Player"}
-            </span>
-            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-              <SelectorIcon
-                className="h-5 w-5 text-gray-400"
-                aria-hidden="true"
-              />
+              {selected ? selected : "Select Team"}
             </span>
           </Listbox.Button>
           <Transition
@@ -46,24 +53,23 @@ export default function TeamListbox(props) {
                   key={index}
                   className={({ active }) =>
                     `relative cursor-default select-none py-2 pl-10 pr-4 ${
-                      active ? "bg-green-100 text-green-900" : "text-gray-900"
+                      active ? "bg-amber-100 text-amber-900" : "text-gray-900"
                     }`
                   }
                   value={team.name}
                 >
-                  {({ selectedTeam }) => (
+                  {({ selected }) => (
                     <>
                       <span
                         className={`block truncate ${
-                          selectedTeam ? "font-medium" : "font-normal"
+                          selected ? "font-medium" : "font-normal"
                         }`}
                       >
-                        <img src={person.image} width={20} height={20} />
-                        {person.name}
+                        {team.name}
                       </span>
-                      {selectedTeam ? (
-                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-green-600">
-                          <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                      {selected ? (
+                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                          {/* <CheckIcon className="h-5 w-5" aria-hidden="true" /> */}
                         </span>
                       ) : null}
                     </>
