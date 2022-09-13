@@ -1,16 +1,37 @@
 import { Fragment, useEffect, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
-import { useMoralis } from "react-moralis";
+import { useMoralis, useMoralisWeb3Api } from "react-moralis";
 import { CheckCircleIcon } from "@heroicons/react/outline";
 
 export default function TeamList() {
-  const { Moralis } = useMoralis();
+  const { Moralis, isWeb3Enabled, enableWeb3 } = useMoralis();
+  const { Web3API } = useMoralisWeb3Api();
+
   const [selected, setSelected] = useState();
   const [gotTeams, setGotTeams] = useState(false);
   const [teams, setTeams] = useState([]);
   const [players, setPlayers] = useState([]);
 
   const [isOwned, setIsOwned] = useState();
+  const [ownedTokens, setOwnedTokens] = useState(new Map());
+
+  useEffect(() => {
+    if (!isWeb3Enabled) enableWeb3();
+    const fetchNFTs = async () => {
+      const testnetNFTs = await Web3API.account.getNFTs({
+        chain: "cronos testnet",
+      });
+      let _players = new Map();
+      testnetNFTs.result.forEach(async (nft) => {
+        if (nft.token_address == "0x396fb51aefcdef80e4b2514cba310787f3ffa74d") {
+          _players[nft.token_id] = true;
+        }
+      });
+      setOwnedTokens(_players);
+      console.log(_players);
+    };
+    fetchNFTs();
+  }, []);
 
   useEffect(() => {
     const Team = Moralis.Object.extend("Team");
@@ -51,6 +72,7 @@ export default function TeamList() {
       });
     }
   }, [selected]);
+
   function change() {
     alert(selected);
   }
@@ -135,7 +157,9 @@ export default function TeamList() {
                 >
                   {card.get("type").toUpperCase()}
                 </div>
-                {isOwned && <CheckCircleIcon className="h-5 text-green-500" />}
+                {ownedTokens[card.get("nftId")] && (
+                  <CheckCircleIcon className="h-5 text-green-500" />
+                )}
               </div>
             </div>
           ))}

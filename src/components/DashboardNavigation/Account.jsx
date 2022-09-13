@@ -84,7 +84,8 @@ export default function Account() {
 
   useEffect(() => {
     if (!isWeb3Enabled) enableWeb3();
-    //  GET ALL PLAYERS
+
+    //  GET ALL PLAYERS OWNED BY USER
 
     const fetchNFTs = async () => {
       const testnetNFTs = await Web3API.account.getNFTs({
@@ -97,7 +98,6 @@ export default function Account() {
             tokenId: nft.token_id,
           });
           _players.push(tokenIdMetadata);
-          console.log(_players);
         }
       });
       setPlayer(_players);
@@ -128,6 +128,7 @@ export default function Account() {
         });
         setLegendary(l);
       });
+
       //  QUERY LEADERBOARD
       const _User = new Moralis.Object.extend("_User");
       const _user = new _User();
@@ -208,20 +209,6 @@ export default function Account() {
                 </div>
               </div>
             </div>
-            {/* <div className="mt-6 flex space-x-3 md:mt-0 md:ml-4">
-              <button
-                type="button"
-                className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
-              >
-                Buy Packs
-              </button>
-            </div> */}
           </div>
         </div>
       </div>

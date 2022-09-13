@@ -1,15 +1,43 @@
 import { useEffect, useState } from "react";
 import { useMoralis, useMoralisWeb3Api } from "react-moralis";
-import Listbox from "../Manager/Listbox";
+import Listbox2 from "../Manager/Listbox2";
+import Notification from "../Notification/Notification";
 
 export default function Manager() {
   const [player, setPlayer] = useState([]);
   const { Web3API } = useMoralisWeb3Api();
   const { Moralis, isWeb3Enabled, enableWeb3 } = useMoralis();
+  const [myTeam, setMyTeam] = useState([]);
 
-  function confirmTeam() {
-    // confirm Team Selection via Smart Contract
-  }
+  // Function to fetch PLAYER ID FROM LISTBOX2
+  const addPlayer = async (playerId) => {
+    let t = myTeam;
+    t.push(playerId);
+    setMyTeam(t);
+  };
+
+  const confirmTeam = async () => {
+    if (myTeam.length != 11) {
+      setDialogType(2); //Failed
+      setNotificationTitle("Confirmation failed");
+      setNotificationDescription("please select 11 players");
+      setShow(true);
+    } else {
+      setDialogType(1); //Success
+      setNotificationTitle("Team Confirmed");
+      setNotificationDescription(`Your team selection has been confirmed`);
+      setShow(true);
+    }
+  };
+
+  //  NOTIFICATION STATES & FUNCTIONS
+  const [show, setShow] = useState(false);
+  const [notificationTitle, setNotificationTitle] = useState();
+  const [notificationDescription, setNotificationDescription] = useState();
+  const [dialogType, setDialogType] = useState(1);
+  const close = async () => {
+    setShow(false);
+  };
 
   useEffect(() => {
     if (!isWeb3Enabled) enableWeb3();
@@ -36,42 +64,42 @@ export default function Manager() {
     <div className="flex flex-col pb-8 items-center  w-full ">
       <div className="flex flex-col items-center justify-center  p-12 w-full rounded-xl bg-green-800  ">
         <div className="py-4 w-2/12 z-50">
-          <Listbox player={player} />
+          <Listbox2 player={player} addPlayer={addPlayer} />
         </div>
         <div className="flex p-12 flex-row space-x-8 items-center justify-evenly w-11/12 z-40">
           <div className="py-2 w-2/12">
-            <Listbox player={player} />
+            <Listbox2 player={player} addPlayer={addPlayer} />
           </div>
           <div className="py-2 w-2/12">
-            <Listbox player={player} />
+            <Listbox2 player={player} addPlayer={addPlayer} />
           </div>
           <div className="py-2 w-2/12">
-            <Listbox player={player} />
+            <Listbox2 player={player} addPlayer={addPlayer} />
           </div>
         </div>
         <div className="py-2 w-2/12 z-30">
-          <Listbox player={player} />
+          <Listbox2 player={player} addPlayer={addPlayer} />
         </div>
         <div className="flex p-12 flex-row space-x-8 items-center justify-evenly w-full z-20">
           <div className="py-2 w-2/12">
-            <Listbox player={player} />
+            <Listbox2 player={player} addPlayer={addPlayer} />
           </div>
           <div className="py-2 w-2/12">
-            <Listbox player={player} />
+            <Listbox2 player={player} addPlayer={addPlayer} />
           </div>
           <div className="py-2 w-2/12">
-            <Listbox player={player} />
+            <Listbox2 player={player} addPlayer={addPlayer} />
           </div>
         </div>
         <div className="py-2 w-2/12 z-10">
-          <Listbox player={player} />
+          <Listbox2 player={player} addPlayer={addPlayer} />
         </div>
         <div className="flex p-12 flex-row space-x-8 items-center justify-evenly w-8/12">
           <div className="py-2 w-3/12">
-            <Listbox player={player} />
+            <Listbox2 player={player} addPlayer={addPlayer} />
           </div>
           <div className="py-2 w-3/12">
-            <Listbox player={player} />
+            <Listbox2 player={player} addPlayer={addPlayer} />
           </div>
         </div>
       </div>
@@ -81,6 +109,13 @@ export default function Manager() {
       >
         Confirm Team
       </button>
+      <Notification
+        type={dialogType}
+        show={show}
+        close={close}
+        title={notificationTitle}
+        description={notificationDescription}
+      />
     </div>
   );
 }
