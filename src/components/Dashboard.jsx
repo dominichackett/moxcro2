@@ -1,9 +1,12 @@
 import { Fragment, useEffect, useState } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
+  ChartPieIcon,
+  ClipboardIcon,
   ClockIcon,
   CreditCardIcon,
   ExclamationCircleIcon,
+  GlobeAltIcon,
   HomeIcon,
   MenuAlt1Icon,
   ScaleIcon,
@@ -18,6 +21,7 @@ import Manager from "./DashboardNavigation/Manager";
 import Collection from "./DashboardNavigation/Collection";
 import Marketplace from "./DashboardNavigation/Marketplace";
 import Teams from "./DashboardNavigation/Teams";
+import Leaderboard from "./DashboardNavigation/Leaderboard";
 import { useChain, useMoralis } from "react-moralis";
 
 const navigation = [
@@ -26,6 +30,9 @@ const navigation = [
   { name: "Collection", href: "#", icon: ScaleIcon, current: false },
   { name: "Marketplace", href: "#", icon: CreditCardIcon, current: false },
   { name: "Teams", href: "#", icon: UserGroupIcon, current: false },
+  { name: "Matches", href: "#", icon: GlobeAltIcon, current: false },
+  { name: "Leaderboard", href: "#", icon: ClipboardIcon, current: false },
+  { name: "Points", href: "#", icon: ChartPieIcon, current: false },
 ];
 
 function classNames(...classes) {
@@ -342,6 +349,9 @@ export default function Dashboard() {
             </div>
             <div hidden={selectedTab != "Teams"}>
               <Teams />
+            </div>
+            <div hidden={selectedTab != "Leaderboard"}>
+              <Leaderboard />
             </div>
           </main>
         </div>
