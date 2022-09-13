@@ -31,10 +31,10 @@ export default function Manager() {
     };
     fetchNFTs();
   }, []);
-
+  //  bg-[url('/soccerfield3.jpeg')] bg for 1st div instead of bg-green-800
   return (
-    <form className="flex flex-col items-center  w-full ">
-      <div className="flex flex-col items-center justify-center  p-12 w-full bg-[url('/wildc-soccer-field.png')]">
+    <div className="flex flex-col pb-8 items-center  w-full ">
+      <div className="flex flex-col items-center justify-center  p-12 w-full rounded-xl bg-green-800  ">
         <div className="py-4 w-2/12 z-50">
           <Listbox player={player} />
         </div>
@@ -81,6 +81,6 @@ export default function Manager() {
       >
         Confirm Team
       </button>
-    </form>
+    </div>
   );
 }

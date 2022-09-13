@@ -91,7 +91,7 @@ export default function Example() {
             <div>
               <div>
                 <img
-                  className="h-11 w-auto"
+                  className="h-20 w-auto"
                   src="wildcardlogo.png"
                   alt="Workflow"
                 />
@@ -102,7 +102,7 @@ export default function Example() {
                     WORLD CUP FANTASY FOOTBALL
                   </h1>
                   <p className="mt-6 text-xl text-gray-500">
-                    Sportscard Trading with Fantasy Football Manager Game
+                    Sportscard trading with fantasy football manager
                   </p>
                 </div>
                 <div className="mt-12 sm:max-w-lg sm:w-full sm:flex">
