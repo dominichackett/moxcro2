@@ -1,14 +1,17 @@
 import { Fragment, useEffect, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { useMoralis } from "react-moralis";
-
+import { CheckCircleIcon } from "@heroicons/react/outline";
 
 export default function TeamList() {
   const { Moralis } = useMoralis();
   const [selected, setSelected] = useState();
-  const [gotTeams,setGotTeams] = useState(false);
+  const [gotTeams, setGotTeams] = useState(false);
   const [teams, setTeams] = useState([]);
-  const [players,setPlayers] = useState([])
+  const [players, setPlayers] = useState([]);
+
+  const [isOwned, setIsOwned] = useState();
+
   useEffect(() => {
     const Team = Moralis.Object.extend("Team");
     const query = new Moralis.Query(Team);
@@ -23,73 +26,72 @@ export default function TeamList() {
       });
       setTeams(r);
       setGotTeams(true);
-      setSelected(r[0].id)
+      setSelected(r[0].id);
     });
     console.log(teams);
   }, []);
 
-
-  useEffect(()=>{
-    if(gotTeams)
-    {
-       const Player = Moralis.Object.extend("Player");
-       const Team = Moralis.Object.extend("Team");
-       const team = new Team();
-       team.id = selected;
-       const query = new Moralis.Query(Player);
-       query.equalTo("team",team);
-       query.include("team");
-       query.ascending("position");
-       query.find().then((results)=>{
-         let p =[]; 
-         results.forEach(result =>{
-             p.push(result);
-          })
-          setPlayers(p);
-          setGotTeams(true)
-       })           
+  useEffect(() => {
+    if (gotTeams) {
+      const Player = Moralis.Object.extend("Player");
+      const Team = Moralis.Object.extend("Team");
+      const team = new Team();
+      team.id = selected;
+      const query = new Moralis.Query(Player);
+      query.equalTo("team", team);
+      query.include("team");
+      query.ascending("position");
+      query.find().then((results) => {
+        let p = [];
+        results.forEach((result) => {
+          p.push(result);
+        });
+        setPlayers(p);
+        setGotTeams(true);
+      });
     }
-
-  },[selected])
-  function change(){
-    alert(selected)
+  }, [selected]);
+  function change() {
+    alert(selected);
   }
-  const handleChange = event => {
+  const handleChange = (event) => {
     setSelected(event.target.value);
   };
-  function playerPosition(pos)
-{
-	 switch(pos){
-		 
-		 case 0: return("Goalkeeper");
-		 break;
-		 
-		 case 1: return("Defender");
-		 break;
-		  case 2: return("Midfielder");
-		 break;
-		 
-		 case 3: return("Forward");
-		 break;
-	 }
-}
-  return (
-    <div >
-      {selected?.Name}
-       <select
-                  id="country"
-                  value={selected} onChange={handleChange}
-                  name="country"
-                  autoComplete="country-name"
-                  className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
-                >
-                   {teams.map((team, index) => (
-                  <option value={team.id}>{team.Name}</option>))}
-                  
-                </select>
-                <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+  function playerPosition(pos) {
+    switch (pos) {
+      case 0:
+        return "Goalkeeper";
+        break;
 
-                <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+      case 1:
+        return "Defender";
+        break;
+      case 2:
+        return "Midfielder";
+        break;
+
+      case 3:
+        return "Forward";
+        break;
+    }
+  }
+  return (
+    <div>
+      {selected?.Name}
+      <select
+        id="country"
+        value={selected}
+        onChange={handleChange}
+        name="country"
+        autoComplete="country-name"
+        className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+      >
+        {teams.map((team, index) => (
+          <option value={team.id}>{team.Name}</option>
+        ))}
+      </select>
+      <div className="max-w-2xl mx-auto py-8 px-4 sm:py-16 sm:px-6 lg:max-w-7xl lg:px-8">
+        <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {players.map((card, cardIdx) => (
             <div
               key={cardIdx}
@@ -133,11 +135,12 @@ export default function TeamList() {
                 >
                   {card.get("type").toUpperCase()}
                 </div>
+                {isOwned && <CheckCircleIcon className="h-5 text-green-500" />}
               </div>
             </div>
           ))}
-        </div>       
+        </div>
+      </div>
     </div>
-</div>
   );
 }

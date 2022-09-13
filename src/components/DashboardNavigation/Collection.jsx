@@ -1,3 +1,4 @@
+import { CheckCircleIcon } from "@heroicons/react/outline";
 import { useEffect, useState } from "react";
 import { useMoralis, useMoralisWeb3Api } from "react-moralis";
 import SellModal from "../Modals/SellModal";
@@ -122,6 +123,7 @@ export default function Collection() {
                     className="inline-flex z-30 items-center px-2 py-1 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
                   >
                     Listed
+                    <CheckCircleIcon className="h-4 ml-2 text-gray-200" />
                   </button>
                 )}
               </div>

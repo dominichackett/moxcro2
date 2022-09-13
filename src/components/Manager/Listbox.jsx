@@ -1,8 +1,6 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
-import { useMoralis } from "react-moralis";
-import Image from "next/image";
 
 export default function Listboxx(props) {
   const [selectedPlayer, setSelectedPlayer] = useState();
