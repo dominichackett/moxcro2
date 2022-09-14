@@ -20,7 +20,7 @@ import Image from "next/image";
 import Manager from "./DashboardNavigation/Manager";
 import Collection from "./DashboardNavigation/Collection";
 import Marketplace from "./DashboardNavigation/Marketplace";
-import Teams from "./DashboardNavigation/Teams";
+import Insight from "./DashboardNavigation/Insight";
 import Leaderboard from "./DashboardNavigation/Leaderboard";
 import Matches from "./DashboardNavigation/Matches";
 import { useMoralis } from "react-moralis";
@@ -342,7 +342,7 @@ export default function Dashboard() {
               <Marketplace />
             </div>
             <div hidden={selectedTab != "Insights"}>
-              <Marketplace />
+              <Insight />
             </div>
           </main>
         </div>

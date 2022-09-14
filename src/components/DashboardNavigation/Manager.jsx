@@ -116,36 +116,49 @@ export default function Manager() {
       const Formation = Moralis.Object.extend("Formation");
       const formation = new Formation();
       formation.id = selectedFormation;
-      let player = new Player();
       let myteam;
+      myteam = new MyTeam();
+      let player = new Player();
       player.id = goalkeeper;
+      myteam.set("formation", formation);
+      myteam.set("stage", currentStage.get("stage"));
+      myteam.set("sub", false);
+      myteam.set("player", player);
+      myteam.set("points", 0);
+      await myteam.save();
 
       defenders.forEach(async (element) => {
         myteam = new MyTeam();
+        player = new Player();
+        player.id = element;
         myteam.set("formation", formation);
-        myteam.set("Stage", currentStage);
+        myteam.set("stage", currentStage.get("stage"));
         myteam.set("sub", false);
-        myteam.set("player", element);
+        myteam.set("player", player);
         myteam.set("points", 0);
         await myteam.save();
       });
 
       midfielders.forEach(async (element) => {
         myteam = new MyTeam();
+        player = new Player();
+        player.id = element;
         myteam.set("formation", formation);
-        myteam.set("Stage", currentStage);
+        myteam.set("stage", currentStage.get("stage"));
         myteam.set("sub", false);
-        myteam.set("player", element);
+        myteam.set("player", player);
         myteam.set("points", 0);
         await myteam.save();
       });
 
       forwards.forEach(async (element) => {
         myteam = new MyTeam();
+        player = new Player();
+        player.id = element;
         myteam.set("formation", formation);
-        myteam.set("Stage", currentStage);
+        myteam.set("stage", currentStage.get("stage"));
         myteam.set("sub", false);
-        myteam.set("player", element);
+        myteam.set("player", player);
         myteam.set("points", 0);
         await myteam.save();
       });

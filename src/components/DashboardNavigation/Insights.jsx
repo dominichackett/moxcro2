@@ -4,44 +4,29 @@ import { useMoralis } from "react-moralis";
 /* This example requires Tailwind CSS v2.0+ */
 const people = [
   {
-    address: "0xfe5056..76523",
-    rank: "1",
+    player: "0xfe5056..76523",
+    points: "1",
+    description: "Goal!",
   },
   {
-    address: "0xfe5056..76523",
-    rank: "1",
+    player: "0xfe5056..76523",
+    points: "1",
+    description: "Goal!",
   },
   {
-    address: "0xfe5056..76523",
-    rank: "1",
+    player: "0xfe5056..76523",
+    points: "1",
+    description: "Goal!",
   },
   {
-    address: "0xfe5056..76523",
-    rank: "1",
+    player: "0xfe5056..76523",
+    points: "1",
+    description: "Goal!",
   },
   {
-    address: "0xfe5056..76523",
-    rank: "1",
-  },
-  {
-    address: "0xfe5056..76523",
-    rank: "1",
-  },
-  {
-    address: "0xfe5056..76523",
-    rank: "1",
-  },
-  {
-    address: "0xfe5056..76523",
-    rank: "1",
-  },
-  {
-    address: "0xfe5056..76523",
-    rank: "1",
-  },
-  {
-    address: "0xfe5056..76523",
-    rank: "1",
+    player: "0xfe5056..76523",
+    points: "1",
+    description: "Goal!",
   },
 ];
 
@@ -52,37 +37,67 @@ function classNames(...classes) {
 export default function Leaderboard() {
   const { Moralis, user } = useMoralis();
 
-  const [ranking, setRanking] = useState([]);
+  const [selected, setSelected] = useState();
+  const [stage, setStage] = useState([]);
+  const [stagePoints, setStagePoints] = useState();
+
+  const [players, setPlayers] = useState([]);
+  const [points, setPoints] = useState();
+
+  const handleChange = (event) => {
+    setSelected(event.target.value);
+  };
 
   useEffect(() => {
-    // LIMIT TO TOP 10 USERS!
-
-    const _User = new Moralis.Object.extend("_User");
-    const _user = new _User();
-    const LeaderBoard = Moralis.Object.extend("LeaderBoard");
-    const query = new Moralis.Query(LeaderBoard);
-    _user.id = user.id;
-
+    const Stage = new Moralis.Object.extend("Stage");
+    const query = new Moralis.Query(Stage);
+    query.ascending();
     query.find().then((results) => {
       let r = [];
       results.forEach((result) => {
         r.push({
-          address: result.get("address"),
-          points: result.get("points"),
+          id: result.id,
+          Name: result.get("name"),
         });
-        setRanking(r);
       });
+      setStage(r);
+      setSelected(r[0].id);
+
+      //   SET THE STAGE POINTS
+      setStagePoints(2000);
     });
   }, []);
 
   return (
-    <div className="px-4 mx-16 sm:px-6 lg:px-8">
-      <div className="sm:flex sm:items-center fixed top-24 bg-white">
+    <div className="px-4 mt-48 mx-16 sm:px-6 lg:px-8">
+      <div className="sm:flex sm:items-center bg-white">
         <div className="sm:flex-auto">
-          <h1 className="text-xl font-semibold text-gray-900">LEADERBOARD</h1>
+          <h1 className="text-xl font-semibold text-gray-900">INSIGHTS</h1>
           <p className="mt-2 text-sm text-gray-700">
-            A ranking of all players participating in the wildcard manager
-            tournament.
+            Breakdown of your gamescore
+          </p>
+        </div>
+      </div>
+      <div className="flex items-center">
+        {selected?.Name}
+        <select
+          id="country"
+          value={selected}
+          onChange={handleChange}
+          name="country"
+          autoComplete="country-name"
+          className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
+        >
+          {stage.map((team, index) => (
+            <option value={team.id}>{team.Name}</option>
+          ))}
+        </select>
+        <div className="flex flex-row items-center">
+          <p className="text-base tracking-wide ml-16">
+            Points for this Stage:
+          </p>
+          <p className="text-base tracking-wide ml-4 font-bold">
+            {stagePoints}
           </p>
         </div>
       </div>
@@ -100,7 +115,7 @@ export default function Leaderboard() {
                       scope="col"
                       className="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8"
                     >
-                      Address
+                      Player
                     </th>
 
                     <th
@@ -113,12 +128,12 @@ export default function Leaderboard() {
                       scope="col"
                       className="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
                     >
-                      Ranking
+                      Description
                     </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white">
-                  {ranking.map((person, personIdx) => (
+                  {people.map((person, personIdx) => (
                     <tr key={person.rank}>
                       <td
                         className={classNames(
@@ -128,7 +143,7 @@ export default function Leaderboard() {
                           "whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8"
                         )}
                       >
-                        {person.address}
+                        {person.player}
                       </td>
                       <td
                         className={classNames(
@@ -148,7 +163,7 @@ export default function Leaderboard() {
                           "whitespace-nowrap px-3 py-4 text-sm text-gray-500 hidden sm:table-cell"
                         )}
                       >
-                        {personIdx + 1}
+                        {person.description}
                       </td>
                     </tr>
                   ))}

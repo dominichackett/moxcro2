@@ -2,6 +2,7 @@ import {
   CurrencyDollarIcon,
   FireIcon,
   GlobeAltIcon,
+  GlobeIcon,
   UserGroupIcon,
 } from "@heroicons/react/outline";
 import {
@@ -42,124 +43,55 @@ export default function Account() {
   const [player, setPlayer] = useState([]);
   const [legendary, setLegendary] = useState([]);
   const [totalPoints, setTotalPoints] = useState(0);
-  const [cards, setCards] = useState([
-    {
-      name: "Total Points",
-      icon: CurrencyDollarIcon,
-      amount: "",
-    },
-    {
-      name: "Players",
-      icon: UserGroupIcon,
-      amount: "",
-    },
-    {
-      name: "Legendary",
-      icon: FireIcon,
-      amount: "",
-    },
-  ]);
-
-  // useEffect(() => {
-  //   if (!isWeb3Enabled) enableWeb3();
-  //   const fetchNFTs = async () => {
-  //     const testnetNFTs = await Web3API.account.getNFTs({
-  //       chain: "cronos testnet",
-  //     });
-  //     let _players = [];
-  //     testnetNFTs.result.forEach(async (nft) => {
-  //       if (nft.token_address == "0x396fb51aefcdef80e4b2514cba310787f3ffa74d") {
-  //         const tokenIdMetadata = await Moralis.Cloud.run("Metadata", {
-  //           tokenId: nft.token_id,
-  //         });
-  //         _players.push(tokenIdMetadata);
-  //         console.log(_players);
-  //       }
-  //     });
-  //     setPlayer(_players);
-  //     console.log(player);
-  //   };
-  //   fetchNFTs();
-  // }, []);
 
   useEffect(() => {
     if (!isWeb3Enabled) enableWeb3();
 
     //  GET ALL PLAYERS OWNED BY USER
-
     const fetchNFTs = async () => {
       const testnetNFTs = await Web3API.account.getNFTs({
         chain: "cronos testnet",
       });
       let _players = [];
+      let l = [];
       testnetNFTs.result.forEach(async (nft) => {
         if (nft.token_address == "0x396fb51aefcdef80e4b2514cba310787f3ffa74d") {
           const tokenIdMetadata = await Moralis.Cloud.run("Metadata", {
             tokenId: nft.token_id,
           });
           _players.push(tokenIdMetadata);
+
+          // tokenIdMetadata.attributes[4].value == "legendary"
+          // l.push(tokenIdMetadata);
         }
       });
+      console.log(_players);
       setPlayer(_players);
-      console.log(player);
+      // setLegendary(l);
     };
     fetchNFTs();
 
-    const Player = Moralis.Object.extend("Player");
-    const query = new Moralis.Query(Player);
-    query.find().then((results) => {
-      let r = [];
-      results.forEach((result) => {
-        r.push({
-          id: result.id,
-          Name: result.get("name"),
-        });
-        // setPlayer(r);
-      });
+    //  GET ONLY LEGENDARY PLAYERS
+    // const Player2 = Moralis.Object.extend("Player");
+    // const query2 = new Moralis.Query(Player2);
+    // query2.equalTo("type", "legendary");
+    // query2.find().then((results) => {
+    //   let l = [];
+    //   results.forEach((result) => {
+    //     l.push(result.get("type"));
+    //   });
+    //   setLegendary(l);
+    // });
 
-      //  GET ONLY LEGENDARY PLAYERS
-      const Player2 = Moralis.Object.extend("Player");
-      const query2 = new Moralis.Query(Player2);
-      query2.equalTo("type", "legendary");
-      query2.find().then((results) => {
-        let l = [];
-        results.forEach((result) => {
-          l.push(result.get("type"));
-        });
-        setLegendary(l);
-      });
-
-      //  QUERY LEADERBOARD
-      const _User = new Moralis.Object.extend("_User");
-      const _user = new _User();
+    //  QUERY TOTAL POINTS
+    const fetchPoints = async () => {
       const LeaderBoard = Moralis.Object.extend("LeaderBoard");
       const query3 = new Moralis.Query(LeaderBoard);
-      // _user.set("objectId", user.id);
-      _user.id = user.id;
-      query3.equalTo("user", _user);
-      query3.first().then((results) => {
-        console.log(results);
-        if (results) setTotalPoints(results.get("points"));
-      });
-      //  SET CARD DETAILS
-      setCards([
-        {
-          name: "Total Points",
-          icon: GlobeAltIcon,
-          amount: totalPoints,
-        },
-        {
-          name: "Players",
-          icon: UserGroupIcon,
-          amount: player.length,
-        },
-        {
-          name: "Legendary",
-          icon: FireIcon,
-          amount: legendary.length,
-        },
-      ]);
-    });
+      query3.equalTo("address", user.get("ethAddress"));
+      const result = await query3.first();
+      if (result) setTotalPoints(result.get("points"));
+    };
+    fetchPoints();
   }, []);
 
   return (
@@ -220,35 +152,79 @@ export default function Account() {
           </h2>
           <div className="mt-2 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {/* Card */}
-            {cards.map((card) => (
-              <div
-                key={card.name}
-                className="bg-white overflow-hidden shadow rounded-lg"
-              >
-                <div className="p-5">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <card.icon
-                        className="h-6 w-6 text-gray-400"
-                        aria-hidden="true"
-                      />
-                    </div>
-                    <div className="ml-5 w-0 flex-1">
-                      <dl>
-                        <dt className="text-sm font-medium text-gray-500 truncate">
-                          {card.name}
-                        </dt>
-                        <dd>
-                          <div className="text-lg font-medium text-gray-900">
-                            {card.amount}
-                          </div>
-                        </dd>
-                      </dl>
-                    </div>
+            <div className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="p-5">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <GlobeIcon
+                      className="h-6 w-6 text-gray-400"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <div className="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt className="text-sm font-medium text-gray-500 truncate">
+                        Total Points
+                      </dt>
+                      <dd>
+                        <div className="text-lg font-medium text-gray-900">
+                          {totalPoints}
+                        </div>
+                      </dd>
+                    </dl>
                   </div>
                 </div>
               </div>
-            ))}
+            </div>
+            <div className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="p-5">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <UserGroupIcon
+                      className="h-6 w-6 text-gray-400"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <div className="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt className="text-sm font-medium text-gray-500 truncate">
+                        Player NFTs
+                      </dt>
+                      <dd>
+                        <div className="text-lg font-medium text-gray-900">
+                          {player.length}
+                        </div>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="p-5">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <FireIcon
+                      className="h-6 w-6 text-gray-400"
+                      aria-hidden="true"
+                    />
+                  </div>
+                  <div className="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt className="text-sm font-medium text-gray-500 truncate">
+                        Legendary
+                      </dt>
+                      <dd>
+                        <div className="text-lg font-medium text-gray-900">
+                          {legendary.length}
+                        </div>
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
