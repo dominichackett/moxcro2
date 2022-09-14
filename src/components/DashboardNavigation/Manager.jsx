@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useRef } from "react";
 import { useMoralis, useMoralisWeb3Api } from "react-moralis";
 import Listbox2 from "../Manager/Listbox2";
 import Notification from "../Notification/Notification";
@@ -7,17 +7,114 @@ export default function Manager() {
   const [player, setPlayer] = useState([]);
   const { Web3API } = useMoralisWeb3Api();
   const { Moralis, isWeb3Enabled, enableWeb3 } = useMoralis();
-  const [myTeam, setMyTeam] = useState([]);
+  const [playerCount, setPlayerCount] = useState(0);
+
+  function errorAddPlayer()
+  {
+    setDialogType(2); //Failed
+    setNotificationTitle("Add Player");
+    setNotificationDescription("Player already selected");
+    setShow(true);
+
+  }
+
+  function incrementPlayerCount() {
+     let count = playerCount;
+     count++;
+     setPlayerCount(count);
+  }
 
   // Function to fetch PLAYER ID FROM LISTBOX2
-  const addPlayer = async (playerId) => {
-    let t = myTeam;
-    t.push(playerId);
-    setMyTeam(t);
+  const addPlayer = (playerId,position,index) => {
+       
+    if(position.localeCompare("Goalkeeper") == 0) //Goalkeeper
+    {
+      setGoalkeeper(playerId);
+      incrementPlayerCount();
+      return true;
+    }
+      
+       console.log(forwards)    
+      if(position.localeCompare("Defender") == 0 )//Defender
+    {
+       const _defender = defenders.find((defender)=>{
+         return defender == playerId;
+       })
+
+       if(_defender)
+       {
+           errorAddPlayer();
+           return false;
+       }
+         
+       else
+       {
+          let d = [];
+          d = defenders;
+          d[index] = playerId;
+          setDefenders(d);
+          incrementPlayerCount();
+          return true;
+       }  
+
+    } 
+
+    if(position.localeCompare("Midfielder") == 0)//Midfielders
+    {
+       const _midfielder = midfielders.find((midfielder)=>{
+         return midfielder == playerId;
+       })
+
+       if(_midfielder)
+         {
+          errorAddPlayer();
+          return false;
+        }
+       else
+       {
+          let m = [];
+          m = midfielders;
+          m[index] = playerId;
+          setMidfielders(m);
+          incrementPlayerCount();
+          return true;
+       }  
+
+    } 
+
+    if(position.localeCompare("Forward") == 0 )//Forwards
+    {
+       const _forward = forwards.find( (forward )=> {
+        
+       return  forward.localeCompare(playerId) == 0})
+
+
+       if(_forward)
+         {
+            errorAddPlayer();
+            return false;
+         }
+       else
+       {
+          let f = [];
+          f = forwards;
+          f[index] = playerId;
+          
+          setForwards(f);
+          incrementPlayerCount();
+          
+          return true;
+       }  
+
+    } 
+
+
+
+   
   };
 
   const confirmTeam = async () => {
-    if (myTeam.length != 11) {
+    if (playerCount != 11) {
       setDialogType(2); //Failed
       setNotificationTitle("Confirmation Failed");
       setNotificationDescription("Please select 11 players");
@@ -35,6 +132,7 @@ export default function Manager() {
   const [notificationTitle, setNotificationTitle] = useState();
   const [notificationDescription, setNotificationDescription] = useState();
   const [formations,setFormations] = useState([]);
+  const  [goalkeeper,setGoalkeeper] = useState();
   const [defenders,setDefenders] = useState([]);
   const [midfielders,setMidfielders] = useState([]);
   const [forwards,setForwards] = useState([]);
@@ -57,11 +155,11 @@ export default function Manager() {
     
     // Fill each array with zeros based on the number of players in that part of the formation  
     for(let x = 0 ; x <_formation.defense; x++)   
-       _defenders.push(0);
+       _defenders.push("");
     for(let x = 0 ; x <_formation.midfield; x++)   
-       _midfielders.push(0);
+       _midfielders.push("");
     for(let x = 0 ; x <_formation.forwards; x++)   
-       _forwards.push(0);
+       _forwards.push("");
     
     //set the number of each positions to display for the formation
     setDefenders(_defenders);
@@ -126,28 +224,28 @@ export default function Manager() {
         </div>
         
         <div className="flex p-12 flex-row space-x-8 items-center justify-evenly w-11/12 z-40">
-        {defenders.map((element) => (
+        {defenders.map((element,index) => (
           <div className="py-2 w-2/12">
-            <Listbox2 player={player} addPlayer={addPlayer} position={"Defender"}/>
+            <Listbox2 player={player} addPlayer={addPlayer} position={"Defender"} index={index}/>
           </div>))}
           </div>
 
        
         <div className="flex p-12 flex-row space-x-8 items-center justify-evenly w-full z-20">
-        {midfielders.map((element) => (
+        {midfielders.map((element,index) => (
        
           <div className="py-2 w-2/12">
-            <Listbox2 player={player} addPlayer={addPlayer} position={"Midfielder"}/>
+            <Listbox2 player={player} addPlayer={addPlayer} position={"Midfielder"} index={index}/>
           </div>))}
           </div>
 
 
        
         <div className="flex p-12 flex-row space-x-8 items-center justify-evenly w-8/12">
-        {forwards.map((element) => (
+        {forwards.map((element,index) => (
        
           <div className="py-2 w-3/12">
-            <Listbox2 player={player} addPlayer={addPlayer} position={"Forward"}/>
+            <Listbox2 player={player} addPlayer={addPlayer} position={"Forward"} index={index}/>
           </div>
        
         ))}

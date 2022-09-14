@@ -5,9 +5,13 @@ export default function TeamList(props) {
 
  
   const handleChange = (event) => {
+    const result = props.addPlayer(event.target.value,props.position,props.index);
+    if(result==true)
     setSelected(event.target.value);
-    props.addPlayer(event.target.value);
-    console.log(event.target.value);
+    else
+      event.target.value = "-1"
+
+    //console.log(event.target.value);
   };
   //   function playerPosition(pos) {
   //     switch (pos) {
