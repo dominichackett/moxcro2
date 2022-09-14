@@ -15,31 +15,27 @@ import {
 } from "@heroicons/react/outline";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 
-import Account from "./DashboardNavigation/Account";
 import Image from "next/image";
-import Manager from "./DashboardNavigation/Manager";
-import Collection from "./DashboardNavigation/Collection";
-import Marketplace from "./DashboardNavigation/Marketplace";
-import Teams from "./DashboardNavigation/Teams";
-import Leaderboard from "./DashboardNavigation/Leaderboard";
-import Matches from "./DashboardNavigation/Matches";
-import { useMoralis } from "react-moralis";
+import Manager from "../DashboardNavigation/Manager";
+import Teams from "../DashboardNavigation/Teams";
+import Matches from "../DashboardNavigation/Matches";
+import { useChain, useMoralis } from "react-moralis";
+import Leaderboard from "../DashboardNavigation/Leaderboard";
 
-//  THIS COMPONENT IS RESPONSIBLE FOR NAVIGATION
+//  THIS COMPONENT IS THE RESPONSIBLE PAGE FOR 2NDARY NAVIGATION
 
 const navigation = [
-  { name: "Account", href: "#", icon: HomeIcon, current: true },
+  { name: "Account", href: "/", icon: HomeIcon, current: true },
   {
     name: "Marketplace",
-    href: "#",
+    href: "/marketplace",
     icon: CreditCardIcon,
     current: false,
   },
-  { name: "Collection", href: "#", icon: ScaleIcon, current: false },
-  // { name: "Manager", href: "#", icon: ClockIcon, current: false },
-  { name: "Insights", href: "#", icon: ChartPieIcon, current: false },
+  { name: "Collection", href: "/", icon: ScaleIcon, current: false },
+  { name: "Insights", href: "/", icon: ChartPieIcon, current: false },
+  //   { name: "Manager", href: "/manager", icon: ClockIcon, current: false },
 ];
-
 const secondaryNavigation = [
   { name: "Manager", href: "/manager", icon: ClockIcon, current: false },
   {
@@ -56,10 +52,10 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Dashboard() {
+export default function Managermain() {
   const { user, logout } = useMoralis();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [selectedTab, setSelectedTab] = useState("Account");
+  const [selectedTab, setSelectedTab] = useState("Manager");
 
   const [cronos, setCronos] = useState(true);
 
@@ -179,7 +175,7 @@ export default function Dashboard() {
               />
             </div>
             <nav
-              className="mt-5 flex-1 flex flex-col divide-y justify-between mb-96 divide-cyan-800 overflow-y-auto"
+              className="mt-5 flex-1 flex flex-col divide-y divide-cyan-800 justify-between mb-96 overflow-y-auto"
               aria-label="Sidebar"
             >
               <div className="px-2 space-y-1">
@@ -216,6 +212,9 @@ export default function Dashboard() {
                   {secondaryNavigation.map((tab) => (
                     <a
                       key={tab.name}
+                      onClick={() => {
+                        setSelectedTab(tab.name);
+                      }}
                       href={tab.href}
                       className={classNames(
                         selectedTab == tab.name
@@ -227,7 +226,7 @@ export default function Dashboard() {
                       <tab.icon
                         className={classNames(
                           selectedTab == tab.name
-                            ? "text-indigo-500 group-hover:text-indigo-500"
+                            ? "text-white bg-cyan-800 group-hover:text-white"
                             : "text-gray-400 group-hover:text-gray-500",
                           "flex-shrink-0 -ml-1 mr-3 h-6 w-6"
                         )}
@@ -331,18 +330,18 @@ export default function Dashboard() {
 
           <main className="flex-1 pb-8">
             {/* THIS WHOLE MAIN SECTION HAS BEEN put into DashboardNavigation/ACCOUNT - */}
-            <div hidden={selectedTab != "Account"}>
-              <Account />
-            </div>
 
-            <div hidden={selectedTab != "Collection"}>
-              <Collection />
+            <div hidden={selectedTab != "Manager"}>
+              <Manager />
             </div>
-            <div hidden={selectedTab != "Marketplace"}>
-              <Marketplace />
+            <div hidden={selectedTab != "Leaderboard"}>
+              <Leaderboard />
             </div>
-            <div hidden={selectedTab != "Insights"}>
-              <Marketplace />
+            <div hidden={selectedTab != "Matches"}>
+              <Matches />
+            </div>
+            <div hidden={selectedTab != "Teams"}>
+              <Teams />
             </div>
           </main>
         </div>

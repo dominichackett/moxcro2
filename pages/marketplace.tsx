@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect } from "react";
 import { useMoralis } from "react-moralis";
-import Dashboard from "../src/components/Dashboard";
+import Marketplace from "../src/components/MAIN/Marketplace";
 import Login from "../src/components/Login";
 
 const Home: NextPage = () => {
@@ -20,7 +20,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/wildcardround.png" />
       </Head>
 
-      <Dashboard />
+      <Marketplace />
     </div>
   );
 };

@@ -15,41 +15,29 @@ import {
 } from "@heroicons/react/outline";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 
-import Account from "./DashboardNavigation/Account";
 import Image from "next/image";
-import Manager from "./DashboardNavigation/Manager";
-import Collection from "./DashboardNavigation/Collection";
-import Marketplace from "./DashboardNavigation/Marketplace";
-import Teams from "./DashboardNavigation/Teams";
-import Leaderboard from "./DashboardNavigation/Leaderboard";
-import Matches from "./DashboardNavigation/Matches";
-import { useMoralis } from "react-moralis";
-
-//  THIS COMPONENT IS RESPONSIBLE FOR NAVIGATION
+import Collection from "../DashboardNavigation/Collection";
+import { useChain, useMoralis } from "react-moralis";
 
 const navigation = [
-  { name: "Account", href: "#", icon: HomeIcon, current: true },
+  { name: "Account", href: "/", icon: HomeIcon, current: true },
   {
     name: "Marketplace",
-    href: "#",
+    href: "/marketplace",
     icon: CreditCardIcon,
     current: false,
   },
-  { name: "Collection", href: "#", icon: ScaleIcon, current: false },
-  // { name: "Manager", href: "#", icon: ClockIcon, current: false },
-  { name: "Insights", href: "#", icon: ChartPieIcon, current: false },
-];
-
-const secondaryNavigation = [
+  { name: "Collection", href: "/collection", icon: ScaleIcon, current: false },
   { name: "Manager", href: "/manager", icon: ClockIcon, current: false },
+  { name: "Insights", href: "/insights", icon: ChartPieIcon, current: false },
   {
     name: "Leaderboard",
-    href: "#",
+    href: "/leaderboard",
     icon: ClipboardIcon,
     current: false,
   },
-  { name: "Matches", href: "#", icon: GlobeAltIcon, current: false },
-  { name: "Teams", href: "#", icon: UserGroupIcon, current: false },
+  { name: "Matches", href: "/matches", icon: GlobeAltIcon, current: false },
+  { name: "Teams", href: "/teams", icon: UserGroupIcon, current: false },
 ];
 
 function classNames(...classes) {
@@ -59,7 +47,7 @@ function classNames(...classes) {
 export default function Dashboard() {
   const { user, logout } = useMoralis();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [selectedTab, setSelectedTab] = useState("Account");
+  const [selectedTab, setSelectedTab] = useState("Collection");
 
   const [cronos, setCronos] = useState(true);
 
@@ -136,6 +124,7 @@ export default function Dashboard() {
                           onClick={() => {
                             setSelectedTab(tab.name);
                           }}
+                          href={tab.href}
                           className={classNames(
                             selectedTab == tab.name
                               ? "bg-cyan-800 text-white"
@@ -157,6 +146,28 @@ export default function Dashboard() {
                         </a>
                       ))}
                     </div>
+                    {/* <div className="mt-6 pt-6">
+                      <div className="px-2 space-y-1">
+                        {secondaryNavigation.map((tab) => (
+                          <a
+                            key={tab.name}
+                            href={item.href}
+                            className="group flex items-center px-2 py-2 text-base font-medium rounded-md text-cyan-100 hover:text-white hover:bg-cyan-600"
+                          >
+                            <tab.icon
+                              className={classNames(
+                                selectedTab == tab.name
+                                  ? "text-indigo-500 group-hover:text-indigo-500"
+                                  : "text-gray-400 group-hover:text-gray-500",
+                                "flex-shrink-0 -ml-1 mr-3 h-6 w-6"
+                              )}
+                              aria-hidden="true"
+                            />
+                            {tab.name}
+                          </a>
+                        ))}
+                      </div>
+                    </div> */}
                   </nav>
                 </Dialog.Panel>
               </Transition.Child>
@@ -179,7 +190,7 @@ export default function Dashboard() {
               />
             </div>
             <nav
-              className="mt-5 flex-1 flex flex-col divide-y justify-between mb-96 divide-cyan-800 overflow-y-auto"
+              className="mt-5 flex-1 flex flex-col divide-y divide-cyan-800 overflow-y-auto"
               aria-label="Sidebar"
             >
               <div className="px-2 space-y-1">
@@ -210,33 +221,6 @@ export default function Dashboard() {
                     {tab.name}
                   </a>
                 ))}
-              </div>
-              <div className="mt-6 pt-6">
-                <div className="px-2 space-y-1">
-                  {secondaryNavigation.map((tab) => (
-                    <a
-                      key={tab.name}
-                      href={tab.href}
-                      className={classNames(
-                        selectedTab == tab.name
-                          ? "bg-cyan-800 text-white"
-                          : "text-cyan-100 hover:text-white hover:bg-cyan-600",
-                        "group cursor-pointer flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md"
-                      )}
-                    >
-                      <tab.icon
-                        className={classNames(
-                          selectedTab == tab.name
-                            ? "text-indigo-500 group-hover:text-indigo-500"
-                            : "text-gray-400 group-hover:text-gray-500",
-                          "flex-shrink-0 -ml-1 mr-3 h-6 w-6"
-                        )}
-                        aria-hidden="true"
-                      />
-                      {tab.name}
-                    </a>
-                  ))}
-                </div>
               </div>
             </nav>
           </div>
@@ -331,18 +315,15 @@ export default function Dashboard() {
 
           <main className="flex-1 pb-8">
             {/* THIS WHOLE MAIN SECTION HAS BEEN put into DashboardNavigation/ACCOUNT - */}
+
             <div hidden={selectedTab != "Account"}>
               <Account />
-            </div>
-
-            <div hidden={selectedTab != "Collection"}>
-              <Collection />
             </div>
             <div hidden={selectedTab != "Marketplace"}>
               <Marketplace />
             </div>
-            <div hidden={selectedTab != "Insights"}>
-              <Marketplace />
+            <div hidden={selectedTab != "Collection"}>
+              <Collection />
             </div>
           </main>
         </div>
