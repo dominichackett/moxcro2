@@ -3,9 +3,7 @@ import { useState } from "react";
 export default function TeamList(props) {
   const [selected, setSelected] = useState();
 
-  function change() {
-    alert(selected);
-  }
+ 
   const handleChange = (event) => {
     setSelected(event.target.value);
     props.addPlayer(event.target.value);
@@ -40,9 +38,12 @@ export default function TeamList(props) {
         autoComplete="player-name"
         className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
       >
+      <option value="-1" disabled selected>Select Player</option>
+
         {props.player.map((person, index) => (
+         person.attributes[1].value.localeCompare(props.position)== 0 &&
           <option value={person.playerId} key={index}>
-            {person.name + " " + person.attributes[0].value}
+            {person.name + " " + person.attributes[0].value }
           </option>
         ))}
       </select>
