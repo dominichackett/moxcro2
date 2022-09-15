@@ -24,6 +24,26 @@ const transactions = [
     date: "August 20, 2022",
     datetime: "2022-08-20",
   },
+  {
+    id: 1,
+    name: "Sold Player on Open Market",
+    href: "#",
+    amount: "5",
+    currency: "CRO",
+    status: "success",
+    date: "September 5, 2022",
+    datetime: "2022-09-5",
+  },
+  {
+    id: 1,
+    name: "Bought Playerpack from Marketplace",
+    href: "#",
+    amount: "$10",
+    currency: "USDC",
+    status: "success",
+    date: "September 10, 2022",
+    datetime: "2022-09-10",
+  },
   // More transactions...
 ];
 const statusStyles = {
@@ -61,8 +81,8 @@ export default function Account() {
           });
           _players.push(tokenIdMetadata);
 
-          if( tokenIdMetadata.attributes[4].value == "legendary")
-           l.push(tokenIdMetadata);
+          if (tokenIdMetadata.attributes[4].value == "legendary")
+            l.push(tokenIdMetadata);
         }
       });
       console.log(_players);

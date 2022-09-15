@@ -215,9 +215,8 @@ export default function Example() {
                 </h2>
                 <div className="mt-6 text-gray-500 space-y-6">
                   <p className="text-lg">
-                    We are bringing the collectibles onChain with a slight twist
-                    and fantasy football manager gamification. Pulling offchain
-                    data via Chainlink.
+                    We are bringing the collectibles onChain with a slight
+                    twist.
                   </p>
                 </div>
               </div>
