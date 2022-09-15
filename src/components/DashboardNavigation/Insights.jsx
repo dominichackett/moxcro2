@@ -1,34 +1,9 @@
 import { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
+import {format} from 'date-fns';
 
 /* This example requires Tailwind CSS v2.0+ */
-const people = [
-  {
-    player: "0xfe5056..76523",
-    points: "1",
-    description: "Goal!",
-  },
-  {
-    player: "0xfe5056..76523",
-    points: "1",
-    description: "Goal!",
-  },
-  {
-    player: "0xfe5056..76523",
-    points: "1",
-    description: "Goal!",
-  },
-  {
-    player: "0xfe5056..76523",
-    points: "1",
-    description: "Goal!",
-  },
-  {
-    player: "0xfe5056..76523",
-    points: "1",
-    description: "Goal!",
-  },
-];
+
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -43,11 +18,74 @@ export default function Leaderboard() {
 
   const [players, setPlayers] = useState([]);
   const [points, setPoints] = useState();
+  const [myPoints,setMyPoints] = useState([]);
 
   const handleChange = (event) => {
     setSelected(event.target.value);
+    
   };
 
+  function playerPosition(pos) {
+    switch (pos) {
+      case 0:
+        return "Goalkeeper";
+        break;
+
+      case 1:
+        return "Defender";
+        break;
+      case 2:
+        return "Midfielder";
+        break;
+
+      case 3:
+        return "Forward";
+        break;
+    }
+  }
+  useEffect(()=>{
+
+   async function getPoints(){ 
+    if(selected)
+    {
+      const Stage = Moralis.Object.extend("Stage");
+      console.log(selected)
+      const _stage = new Stage();
+      _stage.id = selected;
+      const Fixture = Moralis.Object.extend("Fixture")
+      const fixtureQuery = new Moralis.Query(Fixture);
+      fixtureQuery.equalTo("stage",_stage)
+
+      const Points = Moralis.Object.extend("Points");
+      const pointsQuery = new Moralis.Query(Points);
+      pointsQuery.include("player");
+      pointsQuery.include("player.team");
+      pointsQuery.include("fixture");
+      pointsQuery.include("fixture.team2");
+      pointsQuery.include("fixture.team1");
+      pointsQuery.include("category");
+      
+      const MyTeam = Moralis.Object.extend("MyTeam");
+
+      const myTeamQuery = new Moralis.Query(MyTeam);
+      myTeamQuery.equalTo("address",user.get("ethAddress"));
+      pointsQuery.matchesKeyInQuery("fixture","objectId", fixtureQuery);
+      pointsQuery.matchesKeyInQuery("player","player",myTeamQuery)
+      
+     // myTeamQuery.matchesKeyInQuery("player","player",pointsQuery)
+      
+      
+      const results = await pointsQuery.find()
+      let _points = 0;
+      results.forEach(result =>{
+        _points += result.get("category").get("points");    
+      })
+      setStagePoints(_points)
+      setMyPoints(results);
+    }
+  }
+   getPoints()
+  },[selected])
   useEffect(() => {
     const Stage = new Moralis.Object.extend("Stage");
     const query = new Moralis.Query(Stage);
@@ -64,7 +102,7 @@ export default function Leaderboard() {
       setSelected(r[0].id);
 
       //   SET THE STAGE POINTS
-      setStagePoints(2000);
+      setStagePoints(0);
     });
   }, []);
 
@@ -74,22 +112,22 @@ export default function Leaderboard() {
         <div className="sm:flex-auto">
           <h1 className="text-xl font-semibold text-gray-900">INSIGHTS</h1>
           <p className="mt-2 text-sm text-gray-700">
-            Breakdown of your gamescore
+            Breakdown of your game score
           </p>
         </div>
       </div>
       <div className="flex items-center">
         {selected?.Name}
         <select
-          id="country"
+          id="stage"
           value={selected}
           onChange={handleChange}
-          name="country"
-          autoComplete="country-name"
+          name="stage"
+          autoComplete="stage-name"
           className="block w-full max-w-lg rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:max-w-xs sm:text-sm"
         >
-          {stage.map((team, index) => (
-            <option value={team.id}>{team.Name}</option>
+          {stage.map((_stage, index) => (
+            <option value={_stage.id}>{_stage.Name}</option>
           ))}
         </select>
         <div className="flex flex-row items-center">
@@ -130,40 +168,56 @@ export default function Leaderboard() {
                     >
                       Description
                     </th>
+                    <th
+                      scope="col"
+                      className="sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 px-3 py-3.5 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter"
+                    >
+                      Fixture
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white">
-                  {people.map((person, personIdx) => (
+                  {myPoints.map((person, personIdx) => (
                     <tr key={person.rank}>
                       <td
                         className={classNames(
-                          personIdx !== people.length - 1
+                          personIdx !== myPoints.length - 1
                             ? "border-b border-gray-200"
                             : "",
                           "whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8"
                         )}
                       >
-                        {person.player}
+                        {`${person.get("player").get("number")} ${person.get("player").get("name")}- ${playerPosition(person.get("player").get("position"))} - ${person.get("player").get("team").get("name")}`}
                       </td>
                       <td
                         className={classNames(
-                          personIdx !== people.length - 1
+                          personIdx !== myPoints.length - 1
                             ? "border-b border-gray-200"
                             : "",
                           "whitespace-nowrap px-3 py-4 text-sm text-gray-500 hidden sm:table-cell"
                         )}
                       >
-                        {person.points}
+                        {person.get("category").get("points")}
                       </td>
                       <td
                         className={classNames(
-                          personIdx !== people.length - 1
+                          personIdx !== myPoints.length - 1
                             ? "border-b border-gray-200"
                             : "",
                           "whitespace-nowrap px-3 py-4 text-sm text-gray-500 hidden sm:table-cell"
                         )}
                       >
-                        {person.description}
+                        {person.get("category").get("name")}
+                      </td>
+                      <td
+                        className={classNames(
+                          personIdx !== myPoints.length - 1
+                            ? "border-b border-gray-200"
+                            : "",
+                          "whitespace-nowrap px-3 py-4 text-sm text-gray-500 hidden sm:table-cell"
+                        )}
+                      >
+                        {`${person.get("fixture").get("team1").get("name")} vs ${person.get("fixture").get("team2").get("name")} ${format(person.get("fixture").get("date"),'MMM dd')} ` }
                       </td>
                     </tr>
                   ))}

@@ -8,6 +8,7 @@ import {
 import { USDCAddress, USDCABI } from "../../Contracts/USDCContract";
 import { ethers } from "ethers";
 import { useMoralis } from "react-moralis";
+import Notification from "../Notification/Notification";
 
 const product = {
   name: "Sticker Pack (6 Cards)",
@@ -29,7 +30,13 @@ export default function Stickerpack() {
   const { Moralis, web3, enableWeb3, isWeb3Enabled } = useMoralis();
 
   const [USDCApproved, setUSDCApproved] = useState(false);
-
+  const [show, setShow] = useState(false);
+  const [notificationTitle, setNotificationTitle] = useState();
+  const [notificationDescription, setNotificationDescription] = useState();
+  const [dialogType, setDialogType] = useState(1);
+  const close = async () => {
+    setShow(false);
+  };
   const approveUSDC = async () => {
     if (!isWeb3Enabled) enableWeb3();
     const approveUSDC = new ethers.Contract(
@@ -37,11 +44,22 @@ export default function Stickerpack() {
       USDCABI,
       web3.getSigner()
     );
-
+    
+    try{
     let approval = await approveUSDC.approve(WildCardAddress, 10000000);
     await approval.wait().then(() => {
       setUSDCApproved(true);
     });
+  }
+  catch(error)
+  {
+    setDialogType(2); //Failed
+    setNotificationTitle("Purchase Pack Failed");
+    setNotificationDescription(
+      error.data ? error.data.message : error.message
+    );
+    setShow(true);
+  }
   };
   //  Purchase Pack
   const purchasePack = async () => {
@@ -55,11 +73,26 @@ export default function Stickerpack() {
     );
 
     // WORKS UP UNTIL HERE
-
+   try{
     let transaction = await WildcardContract.mintCard(result);
     await transaction.wait().then(() => {
       setUSDCApproved(false);
+      setDialogType(1); //Success
+      setNotificationTitle("Purchase Pack Successful");
+      setNotificationDescription(
+        "You have purchased six new players."
+      );
+      setShow(true);
     });
+  }catch(error)
+  {
+    setDialogType(2); //Failed
+    setNotificationTitle("Purchase Pack Failed");
+    setNotificationDescription(
+      error.data ? error.data.message : error.message
+    );
+    setShow(true);
+  }
   };
 
   return (
@@ -127,6 +160,13 @@ export default function Stickerpack() {
           </div>
         </div>
       </div>
+      <Notification
+        type={dialogType}
+        show={show}
+        close={close}
+        title={notificationTitle}
+        description={notificationDescription}
+      />
     </div>
   );
 }

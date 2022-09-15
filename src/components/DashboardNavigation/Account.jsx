@@ -61,13 +61,13 @@ export default function Account() {
           });
           _players.push(tokenIdMetadata);
 
-          // tokenIdMetadata.attributes[4].value == "legendary"
-          // l.push(tokenIdMetadata);
+          if( tokenIdMetadata.attributes[4].value == "legendary")
+           l.push(tokenIdMetadata);
         }
       });
       console.log(_players);
       setPlayer(_players);
-      // setLegendary(l);
+      setLegendary(l);
     };
     fetchNFTs();
 

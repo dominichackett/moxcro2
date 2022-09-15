@@ -6,7 +6,7 @@ import Notification from "../Notification/Notification";
 export default function Manager() {
   const [player, setPlayer] = useState([]);
   const { Web3API } = useMoralisWeb3Api();
-  const { Moralis, isWeb3Enabled, enableWeb3 } = useMoralis();
+  const { Moralis, isWeb3Enabled, enableWeb3 ,user} = useMoralis();
   const [playerCount, setPlayerCount] = useState(0);
   const [currentStage, setCurrentStage] = useState({});
 
@@ -125,6 +125,7 @@ export default function Manager() {
       myteam.set("sub", false);
       myteam.set("player", player);
       myteam.set("points", 0);
+      myteam.set("address",user.get("ethAddress"));
       await myteam.save();
 
       defenders.forEach(async (element) => {
@@ -136,6 +137,7 @@ export default function Manager() {
         myteam.set("sub", false);
         myteam.set("player", player);
         myteam.set("points", 0);
+        myteam.set("address",user.get("ethAddress"));
         await myteam.save();
       });
 
@@ -148,6 +150,7 @@ export default function Manager() {
         myteam.set("sub", false);
         myteam.set("player", player);
         myteam.set("points", 0);
+        myteam.set("address",user.get("ethAddress"));
         await myteam.save();
       });
 
@@ -160,6 +163,7 @@ export default function Manager() {
         myteam.set("sub", false);
         myteam.set("player", player);
         myteam.set("points", 0);
+        myteam.set("address",user.get("ethAddress"));
         await myteam.save();
       });
       // do more
