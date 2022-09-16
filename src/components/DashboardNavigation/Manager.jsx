@@ -10,6 +10,19 @@ export default function Manager() {
   const [playerCount, setPlayerCount] = useState(0);
   const [currentStage, setCurrentStage] = useState({});
 
+  async function deleteTeam(){
+    const MyTeam = Moralis.Object.extend("MyTeam");
+    const query = new Moralis.Query(MyTeam);
+    query.equalTo("address",user.get("ethAddress"));
+    query.equalTo("stage", currentStage.get("stage"));
+    query.find().then((results)=>{
+      results.forEach(record =>{
+         record.destroy();
+      })
+    })    
+  
+  } 
+
   function errorAddPlayer() {
     setDialogType(2); //Failed
     setNotificationTitle("Add Player");
@@ -104,12 +117,25 @@ export default function Manager() {
   }, []);
 
   const confirmTeam = async () => {
+
+    if(currentStage.get("stage").get("startdate").getTime() < new Date().getTime())
+    {
+      setDialogType(2); //Failed
+      setNotificationTitle("Confirmation Failed");
+      setNotificationDescription("Team selection window is not open.");
+      setShow(true);
+      return;
+
+    }
+    
     if (playerCount != 11) {
       setDialogType(2); //Failed
       setNotificationTitle("Confirmation Failed");
       setNotificationDescription("Please select 11 players");
       setShow(true);
     } else {
+
+      await deleteTeam(); //Delete any team records for current stage
       // save my team
       const MyTeam = Moralis.Object.extend("MyTeam");
       const Player = Moralis.Object.extend("Player");
